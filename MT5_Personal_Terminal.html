@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MT5 Real-Time AI Terminal v4.0 (100% Real MT5 Sync)</title>
+<style>
+  :root {
+    --bg-main: #090c12;
+    --bg-panel: #11151f;
+    --bg-card: #191f2e;
+    --border: #262d40;
+    --text: #d8dee9;
+    --muted: #7c8599;
+    --buy: #089981;
+    --buy-hover: #0bb599;
+    --sell: #f23645;
+    --sell-hover: #ff4d5b;
+    --accent: #2962ff;
+    --warn: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, sans-serif; }
+  body { background: var(--bg-main); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    height: 54px; background: var(--bg-panel); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 10px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 14px; color: #fff; }
+  .badge { padding: 4px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
+  .badge-live { background: rgba(8,153,129,0.2); color: #22ab94; border: 1px solid #089981; }
+  .badge-off { background: rgba(242,54,69,0.2); color: #f87171; border: 1px solid #f23645; }
+  .badge-ai { background: rgba(139,92,246,0.25); color: #c4b5fd; border: 1px solid #8b5cf6; }
+
+  .tf-group { display: flex; gap: 3px; background: var(--bg-main); padding: 3px; border-radius: 6px; border: 1px solid var(--border); }
+  .tf-btn {
+    background: transparent; color: var(--muted); border: none; padding: 4px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+  }
+  .tf-btn.active { background: var(--accent); color: #fff; }
+
+  .top-actions { display: flex; align-items: center; gap: 6px; }
+  .btn {
+    background: var(--bg-card); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 11px; border-radius: 5px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: 0.15s;
+  }
+  .btn:hover { background: #262f45; color: #fff; }
+  .btn-ai-toggle {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); border: 1px solid #8b5cf6; color: #fff;
+    padding: 7px 14px; font-weight: 800; box-shadow: 0 0 12px rgba(139,92,246,0.4);
+  }
+  .btn-ai-toggle.off { background: var(--bg-card); border-color: var(--border); color: var(--muted); box-shadow: none; }
+
+  .workspace {
+    flex: 1; display: grid; grid-template-columns: 300px 1fr 340px; grid-template-rows: 1fr 220px;
+    gap: 1px; background: var(--border); overflow: hidden;
+  }
+  .panel { background: var(--bg-panel); display: flex; flex-direction: column; overflow: hidden; }
+  .panel-header {
+    padding: 7px 12px; background: #151a26; border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel-body { padding: 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 9px; }
+
+  .radar-box { background: var(--bg-card); padding: 10px; border-radius: 6px; border: 1px solid var(--border); }
+  .gauge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .gauge-card { background: #0e121a; padding: 8px; border-radius: 5px; text-align: center; }
+  .gauge-title { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  .gauge-val { font-size: 16px; font-weight: 800; margin-top: 2px; }
+
+  .meter-row { margin-bottom: 7px; }
+  .meter-head { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+  .progress { width: 100%; height: 8px; background: #090c12; border-radius: 4px; overflow: hidden; position: relative; }
+  .progress-bar { height: 100%; transition: width 0.25s; }
+  .threshold-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #fbbf24; z-index: 2; }
+
+  .matrix-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; font-size: 10.5px; }
+  .matrix-cell { background: #0e121a; padding: 5px; border-radius: 4px; text-align: center; border: 1px solid #1c2230; }
+  .matrix-cell b { display: block; font-size: 11.5px; margin-top: 2px; }
+  .bull-txt { color: #22ab94; }
+  .bear-txt { color: #f23645; }
+  .neut-txt { color: #fbbf24; }
+
+  .ind-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 11px; }
+  .ind-check {
+    display: flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 5px 8px;
+    border-radius: 4px; cursor: pointer; user-select: none;
+  }
+
+  .chart-container { flex: 1; display: flex; flex-direction: column; background: #0b0e16; position: relative; overflow: hidden; }
+  #mainChart { width: 100%; flex: 1; display: block; cursor: crosshair; }
+  .chart-hud {
+    position: absolute; top: 8px; left: 10px; pointer-events: none;
+    background: rgba(17,21,31,0.86); border: 1px solid var(--border); padding: 7px 11px; border-radius: 6px;
+    font-size: 11px; line-height: 1.45;
+  }
+  .disconnected-overlay {
+    position: absolute; inset: 0; background: rgba(9,12,18,0.92);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 20; text-align: center; padding: 24px;
+  }
+
+  .price-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .p-box { padding: 8px 10px; border-radius: 6px; background: var(--bg-card); border-left: 3px solid var(--border); }
+  .p-box.sell { border-left-color: var(--sell); }
+  .p-box.buy { border-left-color: var(--buy); }
+  .p-box small { font-size: 10px; color: var(--muted); display: block; }
+  .p-box b { font-size: 16px; color: #fff; }
+
+  .form-card { background: var(--bg-card); padding: 9px; border-radius: 6px; display: flex; flex-direction: column; gap: 7px; border: 1px solid var(--border); }
+  .form-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; }
+  .form-row input, .form-row select {
+    width: 115px; background: #090c12; border: 1px solid var(--border); color: #fff;
+    padding: 4px 7px; border-radius: 4px; text-align: right; font-weight: 600; font-size: 11.5px;
+  }
+
+  .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .exec-btn {
+    padding: 10px 6px; border: none; border-radius: 5px; color: #fff; font-weight: 800; font-size: 12px;
+    cursor: pointer; transition: 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .exec-btn small { font-size: 9.5px; font-weight: 500; opacity: 0.9; }
+  .exec-btn.buy { background: var(--buy); }
+  .exec-btn.buy:hover { background: var(--buy-hover); }
+  .exec-btn.sell { background: var(--sell); }
+  .exec-btn.sell:hover { background: var(--sell-hover); }
+  .exec-btn.pending-buy { background: rgba(8,153,129,0.2); border: 1px solid var(--buy); color: #22ab94; }
+  .exec-btn.pending-buy:hover { background: var(--buy); color: #fff; }
+  .exec-btn.pending-sell { background: rgba(242,54,69,0.2); border: 1px solid var(--sell); color: #f87171; }
+  .exec-btn.pending-sell:hover { background: var(--sell); color: #fff; }
+
+  .toolbox { grid-column: 1 / 4; background: var(--bg-panel); display: flex; flex-direction: column; overflow: hidden; }
+  .tabs { display: flex; gap: 4px; background: #151a26; border-bottom: 1px solid var(--border); padding: 0 10px; align-items: center; }
+  .tab { padding: 7px 12px; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; }
+  .tab.active { color: #fff; border-bottom-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th, td { padding: 5px 10px; text-align: left; border-bottom: 1px solid #191f2e; }
+  th { color: var(--muted); font-size: 10.5px; background: #131824; position: sticky; top: 0; }
+  .pnl-pos { color: #22ab94; font-weight: 700; }
+  .pnl-neg { color: #f23645; font-weight: 700; }
+  .act-sm { padding: 3px 8px; font-size: 10px; border-radius: 3px; cursor: pointer; background: #262d40; color: #fff; border: none; font-weight: 700; }
+  .act-sm:hover { background: var(--sell); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span>⚡ MT5 AI PRO TERMINAL v4.0</span>
+    <span style="color:var(--border)">|</span>
+    <span id="symHeader" style="color:#60a5fa">MENUNGGU MT5...</span>
+    <span id="connBadge" class="badge badge-off">BELUM TERSAMBUNG KE MT5</span>
+  </div>
+
+  <div class="tf-group">
+    <button class="tf-btn active" id="tf_M1" onclick="setTF('M1')">M1</button>
+    <button class="tf-btn" id="tf_M5" onclick="setTF('M5')">M5</button>
+    <button class="tf-btn" id="tf_M15" onclick="setTF('M15')">M15</button>
+    <button class="tf-btn" id="tf_H1" onclick="setTF('H1')">H1</button>
+  </div>
+
+  <div class="top-actions">
+    <!-- AI AUTO-TRADE OFF SECARA DEFAULT SESUAI PERMINTAAN -->
+    <button id="aiBtn" class="btn btn-ai-toggle off" onclick="toggleAI()">🤖 AI AUTO-TRADE: OFF</button>
+    <button id="profitGuardBtn" class="btn off" style="cursor:pointer" onclick="toggleProfitGuard()">🛡️ PROFIT GUARD (BE+TRAIL): OFF</button>
+    <button class="btn" onclick="checkNow()">🔄 Refresh Koneksi</button>
+  </div>
+</div>
+
+<div class="workspace">
+
+  <!-- PANEL KIRI -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>🧠 Analisis Visual AI & EA (Real-Time)</span>
+      <span id="aiActionBadge" class="badge badge-ai">STANDBY (OFF)</span>
+    </div>
+    <div class="panel-body">
+
+      <div class="radar-box">
+        <div class="gauge-grid">
+          <div class="gauge-card">
+            <div class="gauge-title">Confidence AI</div>
+            <div class="gauge-val bull-txt" id="aiConfVal">--%</div>
+          </div>
+          <div class="gauge-card">
+            <div class="gauge-title">Bias Struktur</div>
+            <div class="gauge-val" id="aiBiasVal" style="color:#60a5fa">--</div>
+          </div>
+        </div>
+
+        <div class="meter-row">
+          <div class="meter-head"><span>BUY POWER SCORE</span><span id="buyScoreTxt" class="bull-txt">0.0 / 45</span></div>
+          <div class="progress">
+            <div id="minBuyLine" class="threshold-line" style="left:45%"></div>
+            <div id="buyBar" class="progress-bar" style="width:0%;background:var(--buy)"></div>
+          </div>
+        </div>
+        <div class="meter-row">
+          <div class="meter-head"><span>SELL POWER SCORE</span><span id="sellScoreTxt" class="bear-txt">0.0 / 45</span></div>
+          <div class="progress">
+            <div id="minSellLine" class="threshold-line" style="left:45%"></div>
+            <div id="sellBar" class="progress-bar" style="width:0%;background:var(--sell)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="radar-box">
+        <div style="font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Matriks Konfluensi Sinyal Real</div>
+        <div class="matrix-grid">
+          <div class="matrix-cell">EMA Cross<b id="mxEma" class="neut-txt">--</b></div>
+          <div class="matrix-cell">RSI (14)<b id="mxRsi" class="neut-txt">--</b></div>
+          <div class="matrix-cell">Bollinger<b id="mxBB" class="neut-txt">--</b></div>
+          <div class="matrix-cell">ATR Range<b id="mxAtr" class="neut-txt">--</b></div>
+          <div class="matrix-cell">Zona S/R<b id="mxSR" class="neut-txt">--</b></div>
+          <div class="matrix-cell">Sinyal AI<b id="mxRec" class="neut-txt">WAIT</b></div>
+        </div>
+      </div>
+
+      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">👁️ Indikator Visual di Chart</div>
+      <div class="ind-toggles">
+        <label class="ind-check"><input type="checkbox" id="chkEMA" checked onchange="drawChart()"> EMA Fast & Mid</label>
+        <label class="ind-check"><input type="checkbox" id="chkBB" checked onchange="drawChart()"> Bollinger Bands</label>
+        <label class="ind-check"><input type="checkbox" id="chkSR" checked onchange="drawChart()"> Zona Supp/Res</label>
+        <label class="ind-check"><input type="checkbox" id="chkRSI" checked onchange="drawChart()"> Sub-Chart RSI</label>
+      </div>
+
+      <div class="form-card">
+        <div class="form-row"><span>Periode EMA Fast / Mid:</span>
+          <div style="display:flex;gap:4px;">
+            <input type="number" id="inpEmaFast" value="12" style="width:52px" onchange="drawChart()">
+            <input type="number" id="inpEmaMid" value="34" style="width:52px" onchange="drawChart()">
+          </div>
+        </div>
+        <div class="form-row"><span>Ambang Skor AI Entry:</span>
+          <input type="number" id="inpMinScore" value="45" min="25" max="90">
+        </div>
+        <div class="form-row"><span>Maks Posisi AI Aktif:</span>
+          <input type="number" id="inpMaxPos" value="2" min="1" max="10">
+        </div>
+        <div class="form-row"><span>Strategi Order AI:</span>
+          <select id="inpAiMode">
+            <option value="MARKET_ONLY">Eksekusi Market Langsung</option>
+            <option value="ALL">Market + Limit + Stop</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="radar-box" style="font-size:11px;line-height:1.4;color:#cbd5e1;">
+        <b style="color:#a78bfa">🤖 Status & Logika AI:</b><br>
+        <span id="aiThoughtTxt">AI Auto-Trade sedang OFF. Nyalakan tombol AI di atas jika ingin AI mengeksekusi order otomatis ke MT5.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PANEL TENGAH: CHART REAL MT5 -->
+  <div class="panel">
+    <div class="panel-header">
+      <span id="chartHeaderTitle">📈 Live Chart MT5 — Menunggu Data...</span>
+      <span id="timeVal">--:--:--</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="mainChart"></canvas>
+      <div class="chart-hud" id="chartHud" style="display:none;">
+        <div><b id="hudPrice" style="color:#fff;font-size:13px;">--</b> <span id="hudSpread" style="color:var(--muted)">(Spread: --)</span></div>
+        <div style="color:#38bdf8">━ EMA Fast: <span id="hudEmaF">--</span> &nbsp; <span style="color:#f59e0b">━ EMA Mid: <span id="hudEmaM">--</span></span></div>
+        <div style="color:#a855f7">┈ Bollinger (20, 2) &nbsp; <span style="color:#10b981">█ Support / Resistance</span></div>
+      </div>
+
+      <!-- Layar Pengaman ketika Belum Terhubung (TIDAK ADA MARKET PALSU) -->
+      <div id="disconnOverlay" class="disconnected-overlay">
+        <h2 style="color:#f87171;margin-bottom:8px;">⚠️ Belum Tersambung ke MetaTrader 5</h2>
+        <p style="color:var(--muted);max-width:480px;font-size:13px;line-height:1.5;margin-bottom:14px;">
+          Sesuai permintaanmu, <b>tidak ada market simulasi/palsu yang ditampilkan</b>. Grafik dan harga hanya muncul saat data asli dari MT5 diterima.
+        </p>
+        <div style="background:#151a26;border:1px solid var(--border);padding:12px 16px;border-radius:8px;text-align:left;font-size:12px;line-height:1.6;color:#cbd5e1;">
+          <b>Pastikan 2 hal ini sudah jalan:</b><br>
+          1. Di CMD Windows, jalankan: <code>python bridge_server.py</code><br>
+          2. Di MetaTrader 5, compile & pasang <b>EAFIX_v2_10_FastBridge (v4.0)</b> pada chart, serta aktifkan tombol <b>Algo Trading</b>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL KANAN: EKSEKUSI KE MT5 -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>⚡ Eksekusi Order Riil ke MT5</span>
+      <span id="accEqTop" class="bull-txt">$0.00</span>
+    </div>
+    <div class="panel-body">
+
+      <div class="price-banner">
+        <div class="p-box sell"><small>HARGA BID (SELL)</small><b id="bidVal">--</b></div>
+        <div class="p-box buy"><small>HARGA ASK (BUY)</small><b id="askVal">--</b></div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-row"><span>Volume (Lot):</span><input type="number" id="ordLots" value="0.02" step="0.01" min="0.01"></div>
+        <div class="form-row"><span>Jarak SL (Harga/Offset):</span><input type="number" id="ordSL" value="150.0" step="10.0"></div>
+        <div class="form-row"><span>Jarak TP (Harga/Offset):</span><input type="number" id="ordTP" value="250.0" step="10.0"></div>
+        <div class="form-row"><span>Mode Input SL/TP:</span>
+          <select id="slTpMode">
+            <option value="DIST">Jarak Selisih Harga (Otomatis)</option>
+            <option value="EXACT">Level Harga Eksak</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">1. Eksekusi Instan (Market Order MT5)</div>
+      <div class="btn-grid-2">
+        <button class="exec-btn sell" onclick="placeOrder('SELL')">
+          <span>MARKET SELL</span><small>Kirim ke MT5</small>
+        </button>
+        <button class="exec-btn buy" onclick="placeOrder('BUY')">
+          <span>MARKET BUY</span><small>Kirim ke MT5</small>
+        </button>
+      </div>
+
+      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-top:2px;">2. Pending Order (Buy/Sell Limit & Stop)</div>
+      <div class="form-card">
+        <div class="form-row">
+          <span>Jarak Selisih Harga Pending:</span>
+          <input type="number" id="pendOffset" value="100.0" step="10.0">
+        </div>
+        <div class="btn-grid-2">
+          <button class="exec-btn pending-buy" onclick="placeOrder('BUY_LIMIT')">
+            <span>BUY LIMIT</span><small>Bid - Jarak</small>
+          </button>
+          <button class="exec-btn pending-sell" onclick="placeOrder('SELL_LIMIT')">
+            <span>SELL LIMIT</span><small>Ask + Jarak</small>
+          </button>
+          <button class="exec-btn pending-buy" onclick="placeOrder('BUY_STOP')">
+            <span>BUY STOP</span><small>Ask + Jarak</small>
+          </button>
+          <button class="exec-btn pending-sell" onclick="placeOrder('SELL_STOP')">
+            <span>SELL STOP</span><small>Bid - Jarak</small>
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-grid-2" style="margin-top:auto;">
+        <button class="btn" style="border-color:#22ab94;color:#22ab94" onclick="sendCommand('CLOSE_PROFIT', '0')">💰 Panen Profit Saja</button>
+        <button class="btn" style="border-color:#f23645;color:#fca5a5" onclick="sendCommand('CLOSE_ALL', '0')">✖ Close All & Batal</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PANEL BAWAH: POSISI TERBUKA ASLI MT5 -->
+  <div class="toolbox">
+    <div class="tabs">
+      <div class="tab active" id="tabBtnPos" onclick="switchTab('pos')">Posisi Terbuka MT5 (<span id="cntPos">0</span>)</div>
+      <div class="tab" id="tabBtnPend" onclick="switchTab('pend')">Pending Orders MT5 (<span id="cntPend">0</span>)</div>
+      <div class="tab" id="tabBtnHist" onclick="switchTab('hist')">Log Eksekusi & AI (<span id="cntHist">0</span>)</div>
+      <div style="margin-left:auto;font-size:11.5px;display:flex;gap:14px;padding-right:8px;">
+        <span>Balance: <b id="balVal">$0.00</b></span>
+        <span>Equity: <b id="eqVal">$0.00</b></span>
+        <span>Floating P/L: <b id="fltVal" class="pnl-pos">$0.00</b></span>
+      </div>
+    </div>
+
+    <div class="panel-body" id="tabPos" style="padding:0">
+      <table>
+        <thead>
+          <tr><th>Ticket MT5</th><th>Simbol</th><th>Tipe</th><th>Lot</th><th>Harga Entry</th><th>Stop Loss (SL)</th><th>Take Profit (TP)</th><th>Komentar</th><th>Profit Real (USD)</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="posBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel-body" id="tabPend" style="padding:0;display:none">
+      <table>
+        <thead>
+          <tr><th>Ticket Order</th><th>Simbol</th><th>Tipe Pending</th><th>Lot</th><th>Harga Trigger</th><th>SL</th><th>TP</th><th>Komentar</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="pendBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel-body" id="tabHist" style="display:none;font-family:Consolas,monospace;font-size:11px;">
+      <div id="logList" style="display:flex;flex-direction:column;gap:4px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const serverUrl = 'http://127.0.0.1:8787';
+  let isConnected = false;
+
+  // DEFAULT OFF SESUAI PERMINTAAN!
+  let aiAutoTrade = false;
+  let profitGuard = false;
+  let lastAiTradeTime = 0;
+  let lastGuardModTime = {};
+
+  // State kosong tanpa harga palsu
+  let state = {
+    connected: false,
+    symbol: '-',
+    tf: 'M1',
+    digits: 2,
+    point: 0.01,
+    time: '--:--:--',
+    bid: 0,
+    ask: 0,
+    spread: 0,
+    balance: 0,
+    equity: 0,
+    floating: 0,
+    buyScore: 0,
+    sellScore: 0,
+    minScore: 45,
+    atrVal: 0,
+    positions: [],
+    pending: [],
+    candles: []
+  };
+
+  function addLog(msg, color = '#d8dee9') {
+    const list = document.getElementById('logList');
+    const div = document.createElement('div');
+    div.style.padding = '3px 6px';
+    div.style.background = '#151a26';
+    div.style.borderRadius = '3px';
+    div.style.color = color;
+    div.textContent = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
+    list.prepend(div);
+    if (list.children.length > 80) list.removeChild(list.lastChild);
+    document.getElementById('cntHist').textContent = list.children.length;
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabPos').style.display = tab === 'pos' ? 'block' : 'none';
+    document.getElementById('tabPend').style.display = tab === 'pend' ? 'block' : 'none';
+    document.getElementById('tabHist').style.display = tab === 'hist' ? 'block' : 'none';
+    document.getElementById('tabBtnPos').classList.toggle('active', tab === 'pos');
+    document.getElementById('tabBtnPend').classList.toggle('active', tab === 'pend');
+    document.getElementById('tabBtnHist').classList.toggle('active', tab === 'hist');
+  }
+
+  function toggleAI() {
+    if (!isConnected) {
+      alert('Tidak bisa menyalakan AI sebelum terhubung ke MetaTrader 5!');
+      return;
+    }
+    aiAutoTrade = !aiAutoTrade;
+    const btn = document.getElementById('aiBtn');
+    btn.textContent = aiAutoTrade ? '🤖 AI AUTO-TRADE: ON' : '🤖 AI AUTO-TRADE: OFF';
+    btn.classList.toggle('off', !aiAutoTrade);
+    document.getElementById('aiActionBadge').textContent = aiAutoTrade ? 'AI ACTIVE' : 'STANDBY (OFF)';
+    addLog(`AI Auto-Trade ${aiAutoTrade ? 'DINYALAKAN (Mengendalikan MT5)' : 'DIMATIKAN'}.`, aiAutoTrade ? '#22ab94' : '#f59e0b');
+  }
+
+  function toggleProfitGuard() {
+    if (!isConnected) {
+      alert('Sambungkan ke MT5 terlebih dahulu!');
+      return;
+    }
+    profitGuard = !profitGuard;
+    const btn = document.getElementById('profitGuardBtn');
+    btn.textContent = profitGuard ? '🛡️ PROFIT GUARD (BE+TRAIL): ON' : '🛡️ PROFIT GUARD (BE+TRAIL): OFF';
+    btn.className = 'btn ' + (profitGuard ? 'badge-live' : 'off');
+    addLog(`Profit Guard (Auto Break-Even & Trailing SL di MT5) ${profitGuard ? 'AKTIF' : 'NONAKTIF'}.`, '#38bdf8');
+  }
+
+  function setTF(tf) {
+    if (!isConnected) return;
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('tf_' + tf);
+    if (btn) btn.classList.add('active');
+    sendCommand('SET_TF', tf);
+    addLog(`Meminta MT5 mengganti Timeframe ke ${tf}...`, '#60a5fa');
+  }
+
+  async function sendCommand(action, param) {
+    if (!isConnected && action !== 'SET_TF') {
+      alert('Belum terhubung ke MetaTrader 5! Pastikan bridge_server.py dan EA di MT5 sudah aktif.');
+      return;
+    }
+    const cmdLine = `${Date.now()}${Math.floor(Math.random()*90+10)}|${action}|${param}`;
+    try {
+      await fetch(serverUrl + '/cmd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cmd: cmdLine })
+      });
+      addLog(`Perintah dikirim ke MT5: [${action}] -> ${param}`, '#60a5fa');
+    } catch (e) {
+      addLog(`Gagal mengirim perintah [${action}]: Server Python tidak merespons.`, '#f87171');
+    }
+  }
+
+  // === PERHITUNGAN INDIKATOR DARI CANDLE ASLI MT5 ===
+  function calcEMA(candles, period) {
+    let k = 2 / (period + 1);
+    let arr = [];
+    let ema = candles[0].close;
+    for (let i = 0; i < candles.length; i++) {
+      ema = candles[i].close * k + ema * (1 - k);
+      arr.push(ema);
+    }
+    return arr;
+  }
+
+  function calcBollinger(candles, period = 20, mult = 2.0) {
+    let up = [], mid = [], lo = [];
+    for (let i = 0; i < candles.length; i++) {
+      if (i < period - 1) {
+        up.push(candles[i].close); mid.push(candles[i].close); lo.push(candles[i].close);
+        continue;
+      }
+      let sum = 0;
+      for (let j = i - period + 1; j <= i; j++) sum += candles[j].close;
+      let m = sum / period;
+      let v = 0;
+      for (let j = i - period + 1; j <= i; j++) v += Math.pow(candles[j].close - m, 2);
+      let sd = Math.sqrt(v / period);
+      mid.push(m); up.push(m + mult * sd); lo.push(m - mult * sd);
+    }
+    return { up, mid, lo };
+  }
+
+  function calcRSI(candles, period = 14) {
+    let arr = new Array(candles.length).fill(50);
+    if (candles.length <= period) return arr;
+    let gains = 0, losses = 0;
+    for (let i = 1; i <= period; i++) {
+      let d = candles[i].close - candles[i - 1].close;
+      if (d >= 0) gains += d; else losses -= d;
+    }
+    let avgG = gains / period, avgL = losses / period;
+    for (let i = period; i < candles.length; i++) {
+      if (i > period) {
+        let d = candles[i].close - candles[i - 1].close;
+        avgG = (avgG * (period - 1) + (d > 0 ? d : 0)) / period;
+        avgL = (avgL * (period - 1) + (d < 0 ? -d : 0)) / period;
+      }
+      let rs = avgL === 0 ? 100 : avgG / avgL;
+      arr[i] = 100 - (100 / (1 + rs));
+    }
+    return arr;
+  }
+
+  function calcATR(candles, period = 14) {
+    if (candles.length < 2) return 10;
+    let sum = 0, cnt = 0;
+    for (let i = Math.max(1, candles.length - period); i < candles.length; i++) {
+      let tr = Math.max(
+        candles[i].high - candles[i].low,
+        Math.abs(candles[i].high - candles[i - 1].close),
+        Math.abs(candles[i].low - candles[i - 1].close)
+      );
+      sum += tr; cnt++;
+    }
+    return cnt > 0 ? sum / cnt : 10;
+  }
+
+  function calcSupportResistance(candles) {
+    let recent = candles.slice(-35);
+    let hi = -Infinity, lo = Infinity;
+    recent.forEach(c => { if (c.high > hi) hi = c.high; if (c.low < lo) lo = c.low; });
+    return { res: hi, sup: lo };
+  }
+
+  // === EKSEKUSI ORDER MANUAL & AI KE MT5 ===
+  function computeSLTP(dir, entryPrice, atrFallback = 0) {
+    const d = state.digits || 2;
+    const mode = document.getElementById('slTpMode').value;
+    let rawSL = parseFloat(document.getElementById('ordSL').value) || 0;
+    let rawTP = parseFloat(document.getElementById('ordTP').value) || 0;
+    if (atrFallback > 0) {
+      rawSL = +(atrFallback * 1.6).toFixed(d);
+      rawTP = +(atrFallback * 2.6).toFixed(d);
+    }
+    let sl = 0, tp = 0;
+    if (mode === 'DIST' || atrFallback > 0) {
+      if (rawSL > 0) sl = +(entryPrice - dir * rawSL).toFixed(d);
+      if (rawTP > 0) tp = +(entryPrice + dir * rawTP).toFixed(d);
+    } else {
+      sl = +rawSL.toFixed(d);
+      tp = +rawTP.toFixed(d);
+    }
+    return { sl, tp };
+  }
+
+  function placeOrder(type, customLots = null, customPrice = null, src = 'WEB_MANUAL', useAtrSLTP = false) {
+    if (!isConnected || state.bid <= 0) {
+      alert('Tunggu koneksi harga asli dari MT5 terlebih dahulu!');
+      return;
+    }
+    const d = state.digits || 2;
+    const lots = customLots || parseFloat(document.getElementById('ordLots').value) || 0.01;
+    const offsetVal = parseFloat(document.getElementById('pendOffset').value) || (state.atrVal || 50);
+
+    if (type === 'BUY' || type === 'SELL') {
+      const dir = type === 'BUY' ? 1 : -1;
+      const entry = dir > 0 ? state.ask : state.bid;
+      const { sl, tp } = computeSLTP(dir, entry, useAtrSLTP ? state.atrVal : 0);
+      sendCommand(type, `${lots},${sl},${tp},${src}`);
+      return;
+    }
+
+    const isBuy = type.startsWith('BUY');
+    const dir = isBuy ? 1 : -1;
+    let trigPx = customPrice;
+    if (!trigPx) {
+      if (type === 'BUY_LIMIT') trigPx = state.bid - offsetVal;
+      else if (type === 'SELL_LIMIT') trigPx = state.ask + offsetVal;
+      else if (type === 'BUY_STOP') trigPx = state.ask + offsetVal;
+      else if (type === 'SELL_STOP') trigPx = state.bid - offsetVal;
+    }
+    trigPx = +trigPx.toFixed(d);
+    const { sl, tp } = computeSLTP(dir, trigPx, useAtrSLTP ? state.atrVal : 0);
+    sendCommand(type, `${lots},${trigPx},${sl},${tp},${src}`);
+  }
+
+  // === ANALISIS AI REAL-TIME & KONTROL MT5 ===
+  function evaluateRealMarketAndAI() {
+    const candles = state.candles;
+    if (!candles || candles.length < 20) return;
+
+    const pFast = parseInt(document.getElementById('inpEmaFast').value) || 12;
+    const pMid = parseInt(document.getElementById('inpEmaMid').value) || 34;
+    const emaF = calcEMA(candles, pFast);
+    const emaM = calcEMA(candles, pMid);
+    const bb = calcBollinger(candles, 20, 2.0);
+    const rsiArr = calcRSI(candles, 14);
+    const atr = calcATR(candles, 14);
+    const sr = calcSupportResistance(candles);
+    state.atrVal = atr;
+
+    const n = candles.length - 1;
+    const c1 = candles[n], c2 = candles[n - 1];
+    const ef = emaF[n], em = emaM[n];
+    const rsi = rsiArr[n], rsiPrev = rsiArr[n - 1];
+
+    // Skor Konfluensi Murni dari Data MT5
+    let bScore = 15, sScore = 15;
+    if (ef > em) bScore += 20; else sScore += 20;
+    if (c1.close > ef) bScore += 12; else sScore += 12;
+    if (c1.close > c1.open && c1.close > c2.high) bScore += 16;
+    if (c1.close < c1.open && c1.close < c2.low) sScore += 16;
+    if (rsi > rsiPrev && rsi > 45 && rsi < 72) bScore += 14;
+    if (rsi < rsiPrev && rsi < 55 && rsi > 28) sScore += 14;
+    if (c1.low <= bb.lo[n] + atr * 0.25 && c1.close > c1.open) bScore += 18;
+    if (c1.high >= bb.up[n] - atr * 0.25 && c1.close < c1.open) sScore += 18;
+
+    state.buyScore = Math.min(99, +bScore.toFixed(1));
+    state.sellScore = Math.min(99, +sScore.toFixed(1));
+    state.minScore = parseFloat(document.getElementById('inpMinScore').value) || 45;
+
+    // Update UI Indikator
+    const d = state.digits || 2;
+    document.getElementById('mxEma').textContent = ef > em ? 'BULL' : 'BEAR';
+    document.getElementById('mxEma').className = ef > em ? 'bull-txt' : 'bear-txt';
+    document.getElementById('mxRsi').textContent = rsi.toFixed(1);
+    document.getElementById('mxBB').textContent = c1.close > bb.mid[n] ? 'UPPER' : 'LOWER';
+    document.getElementById('mxAtr').textContent = atr.toFixed(d);
+    document.getElementById('mxSR').textContent = (c1.close - sr.sup < sr.res - c1.close) ? 'SUPP' : 'RES';
+
+    const conf = Math.round(Math.max(state.buyScore, state.sellScore));
+    document.getElementById('aiConfVal').textContent = conf + '%';
+    const isBull = state.buyScore >= state.sellScore;
+    document.getElementById('aiBiasVal').textContent = isBull ? 'BULLISH' : 'BEARISH';
+    document.getElementById('aiBiasVal').style.color = isBull ? '#22ab94' : '#f23645';
+    document.getElementById('mxRec').textContent = state.buyScore >= state.minScore ? 'BUY' : (state.sellScore >= state.minScore ? 'SELL' : 'WAIT');
+    document.getElementById('mxRec').className = state.buyScore >= state.minScore ? 'bull-txt' : (state.sellScore >= state.minScore ? 'bear-txt' : 'neut-txt');
+
+    document.getElementById('hudEmaF').textContent = ef.toFixed(d);
+    document.getElementById('hudEmaM').textContent = em.toFixed(d);
+
+    // 1. PROFIT GUARD REAL MT5 (Geser SL ke Break-Even & Trailing otomatis di MT5)
+    if (profitGuard && state.positions.length > 0 && atr > 0) {
+      const spreadPrice = state.ask - state.bid;
+      state.positions.forEach(p => {
+        const dir = p.type === 'BUY' ? 1 : -1;
+        const curPx = dir > 0 ? state.bid : state.ask;
+        const move = (curPx - p.open) * dir;
+        const lastMod = lastGuardModTime[p.ticket] || 0;
+        if (Date.now() - lastMod < 4000) return;
+
+        // Break-Even Lock saat harga bergerak >= 0.9 ATR
+        if (move >= atr * 0.9) {
+          const beSL = +(p.open + dir * (spreadPrice + atr * 0.15)).toFixed(d);
+          const needUpdate = (dir > 0 && (p.sl === 0 || p.sl < beSL - state.point * 5)) ||
+                             (dir < 0 && (p.sl === 0 || p.sl > beSL + state.point * 5));
+          if (needUpdate) {
+            lastGuardModTime[p.ticket] = Date.now();
+            sendCommand('MODIFY_SLTP', `${p.ticket},${beSL},${p.tp}`);
+            addLog(`🛡️ [PROFIT GUARD] Menggeser SL #${p.ticket} di MT5 ke Break-Even+ (${beSL})`, '#22ab94');
+          }
+        }
+        // Trailing Stop saat harga profit >= 1.5 ATR
+        if (move >= atr * 1.5) {
+          const trailSL = +(curPx - dir * (atr * 0.85)).toFixed(d);
+          const better = (dir > 0 && trailSL > p.sl + atr * 0.2) || (dir < 0 && (p.sl === 0 || trailSL < p.sl - atr * 0.2));
+          if (better) {
+            lastGuardModTime[p.ticket] = Date.now();
+            sendCommand('MODIFY_SLTP', `${p.ticket},${trailSL},${p.tp}`);
+            addLog(`🚀 [TRAILING GUARD] Mengunci profit #${p.ticket} di MT5, SL baru: ${trailSL}`, '#38bdf8');
+          }
+        }
+      });
+    }
+
+    // 2. EKSEKUSI OTOMATIS AI KE MT5 (Hanya jalan jika tombol AI ON!)
+    if (!aiAutoTrade) return;
+
+    const maxPos = parseInt(document.getElementById('inpMaxPos').value) || 2;
+    const now = Date.now();
+    if (now - lastAiTradeTime < 8000) return; // Cooldown 8 detik antar eksekusi AI
+
+    if (state.positions.length >= maxPos) {
+      document.getElementById('aiThoughtTxt').textContent = `Posisi aktif (${state.positions.length}/${maxPos}) sudah penuh. AI memantau SL/TP & Profit Guard.`;
+      return;
+    }
+
+    const lots = parseFloat(document.getElementById('ordLots').value) || 0.02;
+    const aiMode = document.getElementById('inpAiMode').value;
+
+    if (state.buyScore >= state.minScore && state.buyScore > state.sellScore + 8) {
+      lastAiTradeTime = now;
+      document.getElementById('aiActionBadge').textContent = 'AI BUYING MT5';
+      document.getElementById('aiThoughtTxt').textContent = `Sinyal BUY Valid (Skor ${state.buyScore} >= ${state.minScore}). Mengirim perintah Market BUY ke MT5!`;
+      placeOrder('BUY', lots, null, 'AI_AUTO_BUY', true);
+
+      if (aiMode === 'ALL' && state.pending.length === 0) {
+        placeOrder('BUY_LIMIT', lots, +(state.bid - atr * 1.2).toFixed(d), 'AI_BUY_LIM', true);
+      }
+    } else if (state.sellScore >= state.minScore && state.sellScore > state.buyScore + 8) {
+      lastAiTradeTime = now;
+      document.getElementById('aiActionBadge').textContent = 'AI SELLING MT5';
+      document.getElementById('aiThoughtTxt').textContent = `Sinyal SELL Valid (Skor ${state.sellScore} >= ${state.minScore}). Mengirim perintah Market SELL ke MT5!`;
+      placeOrder('SELL', lots, null, 'AI_AUTO_SELL', true);
+
+      if (aiMode === 'ALL' && state.pending.length === 0) {
+        placeOrder('SELL_LIMIT', lots, +(state.ask + atr * 1.2).toFixed(d), 'AI_SELL_LIM', true);
+      }
+    } else {
+      document.getElementById('aiActionBadge').textContent = 'AI SCANNING';
+      document.getElementById('aiThoughtTxt').textContent = `AI aktif memindai MT5 (${state.symbol} ${state.tf}). Skor BUY=${state.buyScore}, SELL=${state.sellScore} (Target >= ${state.minScore}).`;
+    }
+  }
+
+  // === RENDER UI & GRAFIK SKALA PRESISI ===
+  function renderAll() {
+    const d = state.digits || 2;
+    document.getElementById('symHeader').textContent = `${state.symbol} (${state.tf})`;
+    document.getElementById('chartHeaderTitle').textContent = `📈 Live Chart ${state.symbol} (${state.tf}) — Real-Time MT5 Feed`;
+    document.getElementById('timeVal').textContent = state.time;
+
+    // Sinkronkan tombol TF aktif
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    const activeTfBtn = document.getElementById('tf_' + state.tf);
+    if (activeTfBtn) activeTfBtn.classList.add('active');
+
+    document.getElementById('bidVal').textContent = state.bid.toFixed(d);
+    document.getElementById('askVal').textContent = state.ask.toFixed(d);
+    document.getElementById('hudPrice').textContent = state.bid.toFixed(d);
+    document.getElementById('hudSpread').textContent = `(Spread: ${state.spread} pts)`;
+
+    document.getElementById('buyScoreTxt').textContent = `${state.buyScore.toFixed(1)} / ${state.minScore}`;
+    document.getElementById('sellScoreTxt').textContent = `${state.sellScore.toFixed(1)} / ${state.minScore}`;
+    document.getElementById('buyBar').style.width = Math.min(100, state.buyScore) + '%';
+    document.getElementById('sellBar').style.width = Math.min(100, state.sellScore) + '%';
+    document.getElementById('minBuyLine').style.left = state.minScore + '%';
+    document.getElementById('minSellLine').style.left = state.minScore + '%';
+
+    document.getElementById('balVal').textContent = `$${state.balance.toFixed(2)}`;
+    document.getElementById('eqVal').textContent = `$${state.equity.toFixed(2)}`;
+    document.getElementById('accEqTop').textContent = `$${state.equity.toFixed(2)}`;
+
+    const fltEl = document.getElementById('fltVal');
+    fltEl.textContent = `${state.floating >= 0 ? '+' : ''}$${state.floating.toFixed(2)}`;
+    fltEl.className = state.floating >= 0 ? 'pnl-pos' : 'pnl-neg';
+
+    // Tabel Posisi Terbuka Asli MT5
+    const positions = state.positions || [];
+    document.getElementById('cntPos').textContent = positions.length;
+    const posBody = document.getElementById('posBody');
+    if (positions.length === 0) {
+      posBody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:16px;">Tidak ada posisi terbuka di MT5 saat ini.</td></tr>`;
+    } else {
+      posBody.innerHTML = positions.map(p => `
+        <tr>
+          <td>#${p.ticket}</td>
+          <td><b>${state.symbol}</b></td>
+          <td><span class="badge ${p.type === 'BUY' ? 'badge-live' : 'badge-off'}">${p.type}</span></td>
+          <td>${Number(p.lots).toFixed(2)}</td>
+          <td>${Number(p.open).toFixed(d)}</td>
+          <td style="color:#f87171">${p.sl > 0 ? Number(p.sl).toFixed(d) : '-'}</td>
+          <td style="color:#22ab94">${p.tp > 0 ? Number(p.tp).toFixed(d) : '-'}</td>
+          <td><small style="color:#a78bfa">${p.comment || '-'}</small></td>
+          <td class="${p.profit >= 0 ? 'pnl-pos' : 'pnl-neg'}">${p.profit >= 0 ? '+' : ''}$${Number(p.profit).toFixed(2)}</td>
+          <td><button class="act-sm" onclick="sendCommand('CLOSE_TICKET', '${p.ticket}')">Close ✖</button></td>
+        </tr>
+      `).join('');
+    }
+
+    // Tabel Pending Orders Asli MT5
+    const pending = state.pending || [];
+    document.getElementById('cntPend').textContent = pending.length;
+    const pendBody = document.getElementById('pendBody');
+    if (pending.length === 0) {
+      pendBody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px;">Tidak ada Pending Order aktif di MT5.</td></tr>`;
+    } else {
+      pendBody.innerHTML = pending.map(o => `
+        <tr>
+          <td>#${o.id}</td>
+          <td><b>${state.symbol}</b></td>
+          <td style="color:#fbbf24;font-weight:700">${o.type}</td>
+          <td>${Number(o.lots).toFixed(2)}</td>
+          <td><b>${Number(o.price).toFixed(d)}</b></td>
+          <td>${o.sl > 0 ? Number(o.sl).toFixed(d) : '-'}</td>
+          <td>${o.tp > 0 ? Number(o.tp).toFixed(d) : '-'}</td>
+          <td><small>${o.source || '-'}</small></td>
+          <td><button class="act-sm" onclick="sendCommand('CANCEL_PENDING', '${o.id}')">Batal ✖</button></td>
+        </tr>
+      `).join('');
+    }
+
+    drawChart();
+  }
+
+  function drawChart() {
+    const canvas = document.getElementById('mainChart');
+    if (!canvas.parentElement) return;
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    ctx.fillStyle = '#0b0e16';
+    ctx.fillRect(0, 0, W, H);
+
+    const candles = state.candles || [];
+    if (!isConnected || candles.length < 3) return;
+
+    const d = state.digits || 2;
+    const showRSI = document.getElementById('chkRSI').checked;
+    const mainH = showRSI ? Math.floor(H * 0.74) : H - 20;
+    const rsiTop = mainH + 10;
+    const rsiH = H - rsiTop - 16;
+
+    // Skala Harga MURNI Berdasarkan Candle Asli (Agar Grafik Tidak Pernah Gepeng!)
+    let minP = Infinity, maxP = -Infinity;
+    candles.forEach(c => {
+      if (c.low < minP) minP = c.low;
+      if (c.high > maxP) maxP = c.high;
+    });
+    const candleSpan = Math.max(maxP - minP, state.point * 20);
+
+    // Hanya masukkan garis posisi/SL/TP ke skala jika berada di dekat rentang candle (tidak merusak skala)
+    (state.positions || []).forEach(p => {
+      if (Math.abs(p.open - state.bid) < candleSpan * 1.5) {
+        minP = Math.min(minP, p.open); maxP = Math.max(maxP, p.open);
+      }
+      if (p.sl > 0 && Math.abs(p.sl - state.bid) < candleSpan * 1.5) {
+        minP = Math.min(minP, p.sl); maxP = Math.max(maxP, p.sl);
+      }
+      if (p.tp > 0 && Math.abs(p.tp - state.bid) < candleSpan * 1.5) {
+        minP = Math.min(minP, p.tp); maxP = Math.max(maxP, p.tp);
+      }
+    });
+
+    const pad = (maxP - minP) * 0.12 || 1;
+    minP -= pad; maxP += pad;
+
+    const yOf = p => mainH - 12 - ((p - minP) / (maxP - minP)) * (mainH - 28);
+    const plotW = W - 78;
+    const step = plotW / candles.length;
+    const xOf = idx => 10 + idx * step + step / 2;
+
+    // Grid Harga
+    ctx.strokeStyle = '#151b29';
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px monospace';
+    for (let i = 0; i <= 5; i++) {
+      let p = minP + (maxP - minP) * (i / 5);
+      let y = yOf(p);
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
+      ctx.fillText(p.toFixed(d), plotW + 5, y + 3);
+    }
+
+    // Zona Support & Resistance
+    if (document.getElementById('chkSR').checked) {
+      const sr = calcSupportResistance(candles);
+      const yRes = yOf(sr.res), ySup = yOf(sr.sup);
+      ctx.fillStyle = 'rgba(242, 54, 69, 0.12)'; ctx.fillRect(0, yRes - 4, plotW, 8);
+      ctx.fillStyle = 'rgba(8, 153, 129, 0.12)'; ctx.fillRect(0, ySup - 4, plotW, 8);
+    }
+
+    // Bollinger Bands
+    if (document.getElementById('chkBB').checked) {
+      const bb = calcBollinger(candles, 20, 2.0);
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.55)'; ctx.lineWidth = 1;
+      ['up', 'lo'].forEach(k => {
+        ctx.beginPath();
+        bb[k].forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
+        ctx.stroke();
+      });
+    }
+
+    // Candlestick
+    const cw = Math.max(3, step * 0.64);
+    candles.forEach((c, i) => {
+      const x = xOf(i);
+      const bull = c.close >= c.open;
+      ctx.strokeStyle = bull ? '#089981' : '#f23645';
+      ctx.fillStyle = bull ? '#089981' : '#f23645';
+      ctx.beginPath(); ctx.moveTo(x, yOf(c.high)); ctx.lineTo(x, yOf(c.low)); ctx.stroke();
+      const yO = yOf(c.open), yC = yOf(c.close);
+      ctx.fillRect(x - cw / 2, Math.min(yO, yC), cw, Math.max(2, Math.abs(yC - yO)));
+    });
+
+    // EMA Fast & Mid
+    if (document.getElementById('chkEMA').checked) {
+      const pFast = parseInt(document.getElementById('inpEmaFast').value) || 12;
+      const pMid = parseInt(document.getElementById('inpEmaMid').value) || 34;
+      const emaF = calcEMA(candles, pFast);
+      const emaM = calcEMA(candles, pMid);
+
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      emaF.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
+      ctx.stroke();
+
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      emaM.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
+      ctx.stroke();
+    }
+
+    // Garis Harga Bid Saat Ini
+    const yBid = yOf(state.bid);
+    ctx.strokeStyle = '#2962ff'; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(0, yBid); ctx.lineTo(plotW, yBid); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#2962ff'; ctx.fillRect(plotW, yBid - 8, 76, 16);
+    ctx.fillStyle = '#fff'; ctx.fillText(state.bid.toFixed(d), plotW + 4, yBid + 3);
+
+    // Garis Posisi Terbuka & SL/TP Asli MT5
+    (state.positions || []).forEach(p => {
+      const yE = ClpY(yOf(p.open), 12, mainH - 6);
+      ctx.strokeStyle = p.type === 'BUY' ? '#22ab94' : '#f87171';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(0, yE); ctx.lineTo(plotW, yE); ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fillText(`#${p.ticket} ${p.type} ${p.lots} @ ${Number(p.open).toFixed(d)} (${p.profit >= 0 ? '+' : ''}$${Number(p.profit).toFixed(2)})`, 14, yE - 4);
+
+      if (p.sl > 0) {
+        const yS = ClpY(yOf(p.sl), 12, mainH - 6);
+        ctx.strokeStyle = '#ef4444'; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(0, yS); ctx.lineTo(plotW, yS); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#ef4444'; ctx.fillText(`SL #${p.ticket}: ${Number(p.sl).toFixed(d)}`, plotW - 145, yS - 3);
+      }
+      if (p.tp > 0) {
+        const yT = ClpY(yOf(p.tp), 12, mainH - 6);
+        ctx.strokeStyle = '#10b981'; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(0, yT); ctx.lineTo(plotW, yT); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#10b981'; ctx.fillText(`TP #${p.ticket}: ${Number(p.tp).toFixed(d)}`, plotW - 145, yT - 3);
+      }
+    });
+
+    // Garis Pending Order Asli MT5
+    (state.pending || []).forEach(o => {
+      const yP = ClpY(yOf(o.price), 12, mainH - 6);
+      ctx.strokeStyle = '#fbbf24'; ctx.setLineDash([5, 3]);
+      ctx.beginPath(); ctx.moveTo(0, yP); ctx.lineTo(plotW, yP); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillText(`⏳ #${o.id} ${o.type} ${o.lots} @ ${Number(o.price).toFixed(d)}`, 14, yP - 4);
+    });
+
+    // Sub-Chart RSI(14)
+    if (showRSI) {
+      ctx.strokeStyle = '#262d40';
+      ctx.beginPath(); ctx.moveTo(0, mainH + 4); ctx.lineTo(W, mainH + 4); ctx.stroke();
+      const yRsi = val => rsiTop + rsiH - (val / 100) * rsiH;
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)'; ctx.setLineDash([2, 2]);
+      [70, 50, 30].forEach(lvl => {
+        let y = yRsi(lvl);
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
+        ctx.fillStyle = '#64748b'; ctx.fillText(lvl, plotW + 5, y + 3);
+      });
+      ctx.setLineDash([]);
+
+      const rsiArr = calcRSI(candles, 14);
+      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      rsiArr.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yRsi(v)); else ctx.lineTo(xOf(i), yRsi(v)); });
+      ctx.stroke();
+      ctx.fillStyle = '#c084fc';
+      ctx.fillText(`RSI(14): ${rsiArr[rsiArr.length - 1].toFixed(1)}`, 12, rsiTop + 12);
+    }
+  }
+
+  function ClpY(y, lo, hi) { return Math.max(lo, Math.min(hi, y)); }
+
+  // === POLLING MURNI KE LOCAL SERVER MT5 ===
+  async function checkNow() {
+    try {
+      const res = await fetch(serverUrl + '/state');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.connected && data.bid > 0 && data.candles && data.candles.length > 0) {
+          if (!isConnected) {
+            isConnected = true;
+            document.getElementById('disconnOverlay').style.display = 'none';
+            document.getElementById('chartHud').style.display = 'block';
+            const badge = document.getElementById('connBadge');
+            badge.textContent = 'LIVE: TERSAMBUNG REAL KE MT5';
+            badge.className = 'badge badge-live';
+            addLog(`Tersambung real-time ke MetaTrader 5 (${data.symbol} @ ${data.bid})!`, '#22ab94');
+          }
+          state = Object.assign(state, data);
+          evaluateRealMarketAndAI();
+          renderAll();
+          return;
+        }
+      }
+    } catch (e) {}
+
+    // Jika belum terhubung, tampilkan overlay (JANGAN TAMPILKAN MARKET PALSU)
+    isConnected = false;
+    document.getElementById('disconnOverlay').style.display = 'flex';
+    document.getElementById('chartHud').style.display = 'none';
+    const badge = document.getElementById('connBadge');
+    badge.textContent = 'MENUNGGU DATA MT5...';
+    badge.className = 'badge badge-off';
+  }
+
+  setInterval(checkNow, 500);
+  window.addEventListener('resize', drawChart);
+</script>
+</body>
+</html>
