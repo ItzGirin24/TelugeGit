@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*\\.(?:jpg|jpeg|png|gif|webp|svg|mp3|mp4))",
+      "missing": [
+        {
+          "type": "header",
+          "key": "referer"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
+  ]
+}
