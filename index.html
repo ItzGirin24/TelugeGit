@@ -2,1038 +2,539 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MT5 Real-Time AI Terminal v4.0 (100% Real MT5 Sync)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title id="pageTitle">The Wedding of Andre & Shella</title>
+<meta name="theme-color" content="#fbf6e9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Great+Vibes&family=Lora:wght@400;500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-main: #090c12;
-    --bg-panel: #11151f;
-    --bg-card: #191f2e;
-    --border: #262d40;
-    --text: #d8dee9;
-    --muted: #7c8599;
-    --buy: #089981;
-    --buy-hover: #0bb599;
-    --sell: #f23645;
-    --sell-hover: #ff4d5b;
-    --accent: #2962ff;
-    --warn: #f59e0b;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, sans-serif; }
-  body { background: var(--bg-main); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+:root{--ivory:#fbf6e9;--cream:#f1e7d2;--paper:#fffdf7;--sage:#8ba58a;--forest:#283b2d;--gold:#b08d45;--gold2:#e6cc8c;--ink:#2a2a2a;--ink2:#4a4a4a;
+--head:"Cormorant Garamond",Georgia,serif;--body:"Lora",Georgia,serif;--sans:"Montserrat",Arial,sans-serif;--script:"Great Vibes",cursive;
+--ease:cubic-bezier(.2,.8,.2,1); --bounce:cubic-bezier(0.34, 1.56, 0.64, 1); --vh:100vh}
+@supports(height:100svh){:root{--vh:100svh}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--ivory); touch-action: none;}
+body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
+.paused *{animation-play-state:paused!important}
 
-  .topbar {
-    height: 54px; background: var(--bg-panel); border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 10px;
-  }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 14px; color: #fff; }
-  .badge { padding: 4px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
-  .badge-live { background: rgba(8,153,129,0.2); color: #22ab94; border: 1px solid #089981; }
-  .badge-off { background: rgba(242,54,69,0.2); color: #f87171; border: 1px solid #f23645; }
-  .badge-ai { background: rgba(139,92,246,0.25); color: #c4b5fd; border: 1px solid #8b5cf6; }
+img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-events: none; }
 
-  .tf-group { display: flex; gap: 3px; background: var(--bg-main); padding: 3px; border-radius: 6px; border: 1px solid var(--border); }
-  .tf-btn {
-    background: transparent; color: var(--muted); border: none; padding: 4px 10px; border-radius: 4px;
-    font-size: 11px; font-weight: 700; cursor: pointer;
-  }
-  .tf-btn.active { background: var(--accent); color: #fff; }
+.bg-texture {position:fixed; inset:-50%; z-index:0; opacity:0.15; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c16.569 0 30 13.431 30 30S46.569 60 30 60 0 46.569 0 30 13.431 0 30 0zm0 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 10c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23b08d45' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E"); animation: spinBg 180s linear infinite;}
+@keyframes spinBg { 100% {transform: rotate(360deg);} }
 
-  .top-actions { display: flex; align-items: center; gap: 6px; }
-  .btn {
-    background: var(--bg-card); color: var(--text); border: 1px solid var(--border);
-    padding: 6px 11px; border-radius: 5px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: 0.15s;
-  }
-  .btn:hover { background: #262f45; color: #fff; }
-  .btn-ai-toggle {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed); border: 1px solid #8b5cf6; color: #fff;
-    padding: 7px 14px; font-weight: 800; box-shadow: 0 0 12px rgba(139,92,246,0.4);
-  }
-  .btn-ai-toggle.off { background: var(--bg-card); border-color: var(--border); color: var(--muted); box-shadow: none; }
+.glow{position:fixed;width:80vmax;height:80vmax;left:50%;top:-30vmax;margin-left:-40vmax;pointer-events:none;background:radial-gradient(circle,rgba(230,204,140,.4),transparent 60%);animation:glow 6s ease-in-out infinite alternate; z-index:0;}
+@keyframes glow{to{opacity:.6;scale:1.15}}
 
-  .workspace {
-    flex: 1; display: grid; grid-template-columns: 300px 1fr 340px; grid-template-rows: 1fr 220px;
-    gap: 1px; background: var(--border); overflow: hidden;
-  }
-  .panel { background: var(--bg-panel); display: flex; flex-direction: column; overflow: hidden; }
-  .panel-header {
-    padding: 7px 12px; background: #151a26; border-bottom: 1px solid var(--border);
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .panel-body { padding: 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 9px; }
+.sparkles {position:fixed; inset:0; pointer-events:none; z-index:1;}
+.sparkle {position:absolute; width:6px; height:6px; background:var(--gold2); border-radius:50% 0 50% 50%; box-shadow:0 0 8px 2px rgba(230,204,140,0.5); animation: fall linear infinite, swayPetal ease-in-out infinite alternate;}
+@keyframes fall {from {transform: translateY(-10vh) rotate(0deg);} to {transform: translateY(110vh) rotate(360deg);}}
+@keyframes swayPetal {0% {margin-left: -15px;} 100% {margin-left: 15px;}}
 
-  .radar-box { background: var(--bg-card); padding: 10px; border-radius: 6px; border: 1px solid var(--border); }
-  .gauge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-  .gauge-card { background: #0e121a; padding: 8px; border-radius: 5px; text-align: center; }
-  .gauge-title { font-size: 10px; color: var(--muted); text-transform: uppercase; }
-  .gauge-val { font-size: 16px; font-weight: 800; margin-top: 2px; }
+.bf-container {position: absolute; inset: 0; pointer-events: none; z-index: 15; overflow: hidden; display: none;}
+.slide.active .bf-container {display: block;}
+.bf {position: absolute; animation: fly 8s linear infinite; opacity: 0;}
+.bf svg {width: 45px; height: 45px; animation: flap 0.4s infinite alternate ease-in-out; filter: drop-shadow(0 4px 6px rgba(176,141,69,0.4));}
+@keyframes flap { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.1); } }
+@keyframes fly { 0% { transform: translate(-15vw, 90vh) scale(0.6) rotate(15deg); opacity: 0; } 10% { opacity: 1; } 50% { transform: translate(50vw, 40vh) scale(1) rotate(-10deg); } 90% { opacity: 1; } 100% { transform: translate(110vw, -10vh) scale(0.8) rotate(30deg); opacity: 0; } }
+.bf:nth-child(2) { animation-duration: 11s; animation-delay: 2s;}
+.bf:nth-child(2) svg { animation-duration: 0.3s; width: 35px; height: 35px; fill: var(--gold2); }
+.bf:nth-child(3) { animation-duration: 9s; animation-delay: 4.5s; }
+.bf:nth-child(3) svg { animation-duration: 0.5s; width: 55px; height: 55px; fill: var(--gold); }
 
-  .meter-row { margin-bottom: 7px; }
-  .meter-head { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
-  .progress { width: 100%; height: 8px; background: #090c12; border-radius: 4px; overflow: hidden; position: relative; }
-  .progress-bar { height: 100%; transition: width 0.25s; }
-  .threshold-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #fbbf24; z-index: 2; }
+.slide{position:fixed;inset:0;z-index:2;overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s linear .6s}
+.slide.active{opacity:1;visibility:visible;transition-delay:0s}
+.slide.leaving{opacity:0;transform:scale(.95) translateY(-2vh);transition:opacity .5s ease,transform .8s var(--ease)}
+.slide.iris{z-index:4;visibility:visible;opacity:1;transition:none;animation:iris 1.2s cubic-bezier(.65,0,.25,1) both}
+@keyframes iris{from{clip-path:circle(0 at var(--x) var(--y))}to{clip-path:circle(150vmax at var(--x) var(--y))}}
+.wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom); position: relative; max-width: 500px; margin: 0 auto;}
 
-  .matrix-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; font-size: 10.5px; }
-  .matrix-cell { background: #0e121a; padding: 5px; border-radius: 4px; text-align: center; border: 1px solid #1c2230; }
-  .matrix-cell b { display: block; font-size: 11.5px; margin-top: 2px; }
-  .bull-txt { color: #22ab94; }
-  .bear-txt { color: #f23645; }
-  .neut-txt { color: #fbbf24; }
+.r{opacity:0; transform:translateY(25px) scale(0.95) rotateX(10deg); transition: opacity 0.6s var(--ease), transform 0.6s var(--bounce);}
+.r.in{opacity:1; transform:none; transition-delay: var(--d, 0s);}
+.rs i{display:inline-block;opacity:0}
+.rs.in i{animation:let 0.7s var(--bounce) both;animation-delay:calc(var(--d,0s) + var(--i)*25ms)}
+@keyframes let{from{opacity:0;transform:translateY(.3em) scale(.8)}to{opacity:1;transform:none}}
 
-  .ind-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 11px; }
-  .ind-check {
-    display: flex; align-items: center; gap: 6px; background: var(--bg-card); padding: 5px 8px;
-    border-radius: 4px; cursor: pointer; user-select: none;
-  }
+/* GARIS DIHAPUS SEPENUHNYA */
+.gl { display: none !important; }
 
-  .chart-container { flex: 1; display: flex; flex-direction: column; background: #0b0e16; position: relative; overflow: hidden; }
-  #mainChart { width: 100%; flex: 1; display: block; cursor: crosshair; }
-  .chart-hud {
-    position: absolute; top: 8px; left: 10px; pointer-events: none;
-    background: rgba(17,21,31,0.86); border: 1px solid var(--border); padding: 7px 11px; border-radius: 6px;
-    font-size: 11px; line-height: 1.45;
-  }
-  .disconnected-overlay {
-    position: absolute; inset: 0; background: rgba(9,12,18,0.92);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 20; text-align: center; padding: 24px;
-  }
+.floating { animation: floatAnim 4s ease-in-out infinite; }
+.floating-del { animation: floatAnim 4s ease-in-out infinite 2s; }
+@keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-  .price-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .p-box { padding: 8px 10px; border-radius: 6px; background: var(--bg-card); border-left: 3px solid var(--border); }
-  .p-box.sell { border-left-color: var(--sell); }
-  .p-box.buy { border-left-color: var(--buy); }
-  .p-box small { font-size: 10px; color: var(--muted); display: block; }
-  .p-box b { font-size: 16px; color: #fff; }
+.btn{position:relative;overflow:hidden;font-family:var(--sans);font-size:clamp(0.65rem, 1.5vh, 0.75rem);font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--forest);background:linear-gradient(180deg,#fffaf0,#f0e2bf);border:1px solid var(--gold);padding:1.5vh 3vh;border-radius:40px;cursor:pointer;box-shadow:0 8px 20px rgba(120,90,40,.2);transition:transform .3s var(--ease), box-shadow .3s; pointer-events:auto;}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.8) 50%,transparent 65%);transform:translateX(-120%);animation:shine 3s 2s infinite}
+@keyframes shine{0%,70%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.btn:active{transform:scale(.94)}.btn.ghost{background:transparent;box-shadow:none;border-color:transparent;}
+#btnOpen { animation: pulseGlow 2s infinite; }
+@keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(176,141,69,0.6); } 70% { box-shadow: 0 0 0 15px rgba(176,141,69,0); } 100% { box-shadow: 0 0 0 0 rgba(176,141,69,0); } }
 
-  .form-card { background: var(--bg-card); padding: 9px; border-radius: 6px; display: flex; flex-direction: column; gap: 7px; border: 1px solid var(--border); }
-  .form-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; }
-  .form-row input, .form-row select {
-    width: 115px; background: #090c12; border: 1px solid var(--border); color: #fff;
-    padding: 4px 7px; border-radius: 4px; text-align: right; font-weight: 600; font-size: 11.5px;
-  }
+#ring{position:fixed;left:var(--x);top:var(--y);width:300vmax;height:300vmax;translate:-50% -50%;z-index:6;pointer-events:none;opacity:0;fill:none;stroke:var(--gold);stroke-width:2}
+#ring.go{animation:ring 1s cubic-bezier(.65,0,.25,1)}
+@keyframes ring{from{opacity:.9;scale:0}to{opacity:0;scale:1}}
 
-  .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .exec-btn {
-    padding: 10px 6px; border: none; border-radius: 5px; color: #fff; font-weight: 800; font-size: 12px;
-    cursor: pointer; transition: 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  }
-  .exec-btn small { font-size: 9.5px; font-weight: 500; opacity: 0.9; }
-  .exec-btn.buy { background: var(--buy); }
-  .exec-btn.buy:hover { background: var(--buy-hover); }
-  .exec-btn.sell { background: var(--sell); }
-  .exec-btn.sell:hover { background: var(--sell-hover); }
-  .exec-btn.pending-buy { background: rgba(8,153,129,0.2); border: 1px solid var(--buy); color: #22ab94; }
-  .exec-btn.pending-buy:hover { background: var(--buy); color: #fff; }
-  .exec-btn.pending-sell { background: rgba(242,54,69,0.2); border: 1px solid var(--sell); color: #f87171; }
-  .exec-btn.pending-sell:hover { background: var(--sell); color: #fff; }
+.kicker{font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink2);text-align:center}
+.cname{font-family:var(--head);font-weight:600;font-size:clamp(2.4rem,9vw,3.2rem);line-height:1;color:var(--forest);text-align:center;margin:.6rem 0 .8rem; animation: floatText 5s ease-in-out infinite;}
+.cname small{display:block;font-family:var(--script);font-size:1.4em;color:var(--gold);line-height:0.7; margin: 0.3rem 0;}
+@keyframes floatText { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-5px);} }
+.fi{opacity:0;animation:fi 1s both}@keyframes fi{to{opacity:1}}
+#cover.opening .fi{opacity:0;animation:none;transition:opacity .3s}
 
-  .toolbox { grid-column: 1 / 4; background: var(--bg-panel); display: flex; flex-direction: column; overflow: hidden; }
-  .tabs { display: flex; gap: 4px; background: #151a26; border-bottom: 1px solid var(--border); padding: 0 10px; align-items: center; }
-  .tab { padding: 7px 12px; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; }
-  .tab.active { color: #fff; border-bottom-color: var(--accent); }
-  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-  th, td { padding: 5px 10px; text-align: left; border-bottom: 1px solid #191f2e; }
-  th { color: var(--muted); font-size: 10.5px; background: #131824; position: sticky; top: 0; }
-  .pnl-pos { color: #22ab94; font-weight: 700; }
-  .pnl-neg { color: #f23645; font-weight: 700; }
-  .act-sm { padding: 3px 8px; font-size: 10px; border-radius: 3px; cursor: pointer; background: #262d40; color: #fff; border: none; font-weight: 700; }
-  .act-sm:hover { background: var(--sell); }
+.env{position:relative;width:min(80vw,320px);aspect-ratio:3/2;margin:2vh 0 3vh;perspective:1000px;opacity:0; cursor: pointer; pointer-events:auto;animation:envin 1.2s .3s var(--bounce) forwards;transition:transform 1s var(--ease), opacity .5s .4s}
+@keyframes envin{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:none}}
+#cover.zoom .env{transform:translateY(25vh) scale(4);opacity:0}
+
+.eb{position:absolute;inset:0;background:linear-gradient(160deg,#efe3c6,#e2d1a8);border-radius:6px;box-shadow:0 15px 30px rgba(80,60,30,.25);transition:box-shadow 1s}
+.open .eb{box-shadow:0 8px 16px rgba(80,60,30,.2),0 0 0 1px rgba(176,141,69,.55)}
+.lt{position:absolute;left:5%;right:5%;top:5%;bottom:8%;background:var(--paper);z-index:2;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, box-shadow 0.8s 0.5s} 
+.open .lt{transform:translateY(-80%);box-shadow:0 15px 25px rgba(80,60,30,.2)}
+.lt b{font-family:var(--script);font-weight:400;font-size:clamp(2.5rem, 8vw, 3rem);color:var(--forest);text-align:center;padding:0 10px; display: flex; align-items: center; gap: 8px;}
+.lt b span{font-size: 0.6em; color: var(--gold);}
+
+.pk{position:absolute;inset:0;z-index:3;border-radius:6px;background:linear-gradient(170deg,#f6ecd2,#e8d9b3);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%)}
+.fp{position:absolute;left:0;right:0;top:0;height:58%;z-index:4;transform-origin:top center;background:linear-gradient(180deg,#f8efd8,#e6d6b0);clip-path:polygon(0 0,100% 0,50% 100%);transition:transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, z-index 0s linear 0.4s} 
+.open .fp{transform:rotateX(180deg);z-index:1}
+.seal{position:absolute;left:50%;top:58%;width:56px;height:56px;margin:-28px 0 0 -28px;z-index:5;border-radius:50%;display:grid;place-items:center;font-family:var(--script);font-size:1.4rem;color:#fffdf7;background:radial-gradient(circle at 35% 30%,#f2dc9f,var(--gold) 55%,#85692f);box-shadow:0 5px 10px rgba(80,60,20,.3),inset 0 0 0 2px rgba(255,255,255,.3);animation:sealin 0.8s 1s var(--bounce) both;transition:opacity .3s}
+@keyframes sealin{from{transform:scale(0);opacity:0}to{transform:none;opacity:1}}
+.open .seal{opacity:0; transform:scale(1.5);}
+.magic-dust {position:absolute; width:8px; height:8px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:10; opacity:0; box-shadow:0 0 6px var(--gold2);}
+@keyframes burst { 0% {transform:translate(0,0) scale(1); opacity:1;} 100% {transform:translate(var(--tx), var(--ty)) scale(0); opacity:0;} }
+
+.paper-wrap { width: 100%; max-height: 85vh; overflow-y: auto; padding: 10px; pointer-events:auto;}
+.paper{position:relative;width:100%;padding:4vh 2vh;text-align:center;background-color:var(--paper);background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");border-radius:8px;box-shadow:0 15px 35px rgba(47,74,55,.1),0 0 0 1px rgba(176,141,69,.25);}
+
+.sal{font-family:var(--head); font-style:italic; font-size: 1.15rem; color:var(--forest); margin-bottom: 2vh; font-weight: 500;}
+.sal2{font-family:var(--head); font-style:italic; font-size: 1.15rem; color:var(--forest); margin-top: 2vh; font-weight: 500;}
+.paper p{font-size:0.9rem; line-height:1.7; margin:1vh 0; color: var(--ink);}
+.nm{font-family:var(--script); font-weight:400; font-size:clamp(3.2rem,10vw,4rem); line-height:1.1; color:var(--forest); margin:2vh 0; text-shadow: 1px 1px 0 rgba(176,141,69,.15); animation: floatText 5s ease-in-out infinite alternate-reverse;}
+.dt{font-family:var(--sans); font-weight:700; font-size: 0.85rem; letter-spacing: 0.15em; color: #9a7633; display: inline-block; padding: 0.2rem 0; border-bottom: 1px solid rgba(176,141,69,0.5);}
+
+.floral-bg { position: absolute; top: 0; left: 0; width: 120px; height: 120px; pointer-events: none; z-index: 0; opacity: 0.7; transform-origin: top left; animation: swayFlower 6s ease-in-out infinite alternate; }
+.floral-corner-paper-tl { position: absolute; top: -10px; left: -10px; width: 80px; height: 80px; pointer-events: none; z-index: 0; opacity: 0.3; transform-origin: top left; animation: swayFlower 7s ease-in-out infinite alternate; }
+.floral-corner-paper-br { position: absolute; bottom: -10px; right: -10px; width: 80px; height: 80px; pointer-events: none; z-index: 0; opacity: 0.3; transform-origin: bottom right; animation: swayFlowerBr 6.5s ease-in-out infinite alternate; }
+@keyframes swayFlower { 0% {transform: rotate(-3deg);} 100% {transform: rotate(3deg);} }
+@keyframes swayFlowerBr { 0% {transform: rotate(177deg);} 100% {transform: rotate(183deg);} }
+
+.names-gal{font-family:var(--head);font-weight:600;font-size:2rem;line-height:1.1;color:var(--forest);margin:.5vh 0; text-align: center; position:relative; z-index: 2;}
+
+.diag-gallery { position: relative; width: 100%; max-width: 380px; height: 50vh; min-height: 400px; max-height: 460px; margin: 2vh auto 3vh; z-index: 2;}
+.diag-item { position: absolute; width: 52%; background: var(--paper); padding: 6px 6px 2.2rem 6px; border-radius: 120px 120px 6px 6px; box-shadow: 0 15px 25px rgba(47,74,55,0.15); }
+.diag-tl { top: 0; left: 0; z-index: 2; }
+.diag-br { bottom: -2%; right: 0; z-index: 1; }
+
+.photo-inner{position:relative; width:100%; aspect-ratio:4/5; overflow:hidden; border-radius:114px 114px 2px 2px; background: #e0d8c3; z-index: 1;}
+.img-blur { width:100%; height:100%; object-fit:cover; display:block; filter: blur(10px); transform: scale(1.1); opacity: 0; transition: filter 0.5s ease, opacity 0.5s ease; backface-visibility: hidden; will-change: transform;}
+.img-blur.loaded { filter: blur(0); opacity: 1; animation: kenBurns 15s ease-in-out infinite alternate; }
+@keyframes kenBurns { 0% {transform: scale(1);} 100% {transform: scale(1.05);} }
+.photo-label { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 85%; background: #fff; padding: 6px 0; text-align: center; font-family: var(--sans); font-size: 0.65rem; font-weight: 600; color: var(--forest); letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.2; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 2; border-radius: 4px; border: 1px solid rgba(176,141,69,0.2);}
+
+.inv-wrap { width: 100%; max-width: 420px; max-height: 65vh; overflow-y: auto; padding: 1vh 10px; z-index: 2; pointer-events:auto;}
+.inv-list { list-style: none; padding: 0; margin: 0;}
+.inv-item { background: rgba(255, 253, 247, 0.85); border: 1.5px solid rgba(176,141,69,0.3); border-radius: 8px; margin-bottom: 1.5vh; padding: 2vh; text-align: center; box-shadow: 0 4px 12px rgba(47,74,55,0.06); transition: transform 0.3s;}
+.inv-name { font-family: var(--head); font-size: clamp(1.1rem, 2.5vh, 1.3rem); font-weight: 600; color: var(--forest); line-height: 1.2; margin-bottom: 0.5vh;}
+.inv-desc { font-family: var(--sans); font-size: clamp(0.55rem, 1.5vh, 0.65rem); color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;}
+
+.s3-grid { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 85vh; gap: 3.5vh; padding: 3vh 0; z-index: 2; }
+.cd-wrap { text-align: center; width: 100%; flex-shrink: 0; }
+.cd-title-count { font-family:var(--head); font-size:clamp(1.5rem, 4vh, 2rem); font-weight:600; color:var(--forest); letter-spacing:0.1em; line-height:1; }
+.cd-title-days { font-family:var(--head); font-size:clamp(1.4rem, 3.5vh, 1.8rem); font-weight:500; color:var(--gold); letter-spacing:0.1em; line-height:1; margin-top:0.5vh; }
+.cd-box { position: relative; width: 90%; max-width: 320px; padding: 2vh 0.5rem; margin: 1.5vh auto 0; background: rgba(255, 253, 247, 0.9); border: 1.5px solid var(--forest); border-radius: 12px; box-shadow: 0 8px 16px rgba(47,74,55,0.08); }
+.cd-box::before { content: ""; position: absolute; inset: 4px; border: 1px dashed var(--forest); opacity: 0.4; border-radius: 8px; pointer-events: none; }
+.cd-inner{display:flex; justify-content:center; gap:0.4rem; align-items: baseline; color:var(--ink); position: relative; z-index: 2;}
+.cd-item{display:flex; flex-direction:column; align-items:center; min-width:clamp(45px, 12vw, 55px);}
+.cd-num{font-family:var(--head); font-size:clamp(1.8rem, 5vh, 2.4rem); font-weight:500; color:var(--ink); line-height: 1; animation: heartbeat 1s infinite;}
+@keyframes heartbeat { 0%, 20%, 100% { transform: scale(1); } 10% { transform: scale(1.15); color: var(--gold); } }
+.cd-label{font-family:var(--sans); font-size:clamp(0.45rem, 1.2vh, 0.55rem); letter-spacing:0.1em; font-weight:600; text-transform:uppercase; color:var(--ink); margin-top: 0.5vh;}
+.cd-sep{font-family:var(--head); font-size:clamp(1.5rem, 4vh, 2rem); font-weight:400; color:var(--ink); transform: translateY(-0.8vh);}
+
+.cal-wrap { width: 100%; max-width: 300px; text-align: center; flex-shrink: 0; }
+.cal-title{font-family:var(--script); font-size:clamp(2.5rem, 7vh, 3.5rem); color:var(--forest); line-height:1; margin-bottom:1.5vh;}
+.cal-grid{display:grid; grid-template-columns:repeat(7, 1fr); gap:0.2rem; width:100%; font-family:var(--sans); color:var(--ink);}
+.cal-day{font-size:clamp(0.55rem, 1.5vh, 0.65rem); font-weight:600; color:var(--gold); margin-bottom:0.5vh;}
+.cal-date{font-size:clamp(0.75rem, 2vh, 0.85rem); font-weight:500; display:flex; align-items:center; justify-content:center; aspect-ratio:1;}
+.cal-mark{background:var(--forest); color:#fff; border-radius:50%; box-shadow: 0 4px 8px rgba(47,74,55,0.4); position:relative; animation: pulseGlow 2s infinite;}
+.cal-mark::before{content:""; position:absolute; inset:-3px; border:1px solid var(--gold); border-radius:50%;}
+
+.map-wrap { width: 100%; display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin-top: 1vh; pointer-events:auto;}
+.map-env { position: relative; width: min(75vw, 260px); height: 14vh; min-height: 90px; background: #2f4a37; border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; }
+.map-env::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom right, transparent 49%, rgba(0,0,0,0.15) 50%, transparent 51%); pointer-events:none;}
+.map-env::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent 49%, rgba(0,0,0,0.15) 50%, transparent 51%); pointer-events:none;}
+.map-oval { position: absolute; width: clamp(110px, 22vh, 130px); height: clamp(120px, 25vh, 150px); background: var(--paper); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 2px dashed rgba(176,141,69,0.5); }
+.map-oval svg { width: clamp(25px, 6vh, 40px); height: clamp(25px, 6vh, 40px); color: var(--ink); margin-bottom: 5px; }
+.map-oval p { font-family: var(--head); font-size: clamp(0.8rem, 2vh, 1rem); color: var(--ink); margin-bottom: 8px; }
+.map-btn { font-family: var(--sans); font-size: clamp(0.45rem, 1.2vh, 0.55rem); font-weight: 600; letter-spacing: 0.1em; color: var(--forest); background: linear-gradient(180deg,#fffaf0,#f0e2bf); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--gold); box-shadow: 0 4px 10px rgba(176,141,69,0.3); text-decoration: none; text-transform: uppercase; position: relative; }
+.map-btn::after {content:""; position:absolute; inset:-4px; border-radius:30px; border:1.5px solid var(--gold); animation: ripple 1.5s infinite ease-out;}
+
+.s3-bottom { text-align: center; margin-top: 1vh; flex-shrink: 0; display:flex; gap:10px; justify-content:center; pointer-events:auto;}
+.music{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:20;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:rgba(255,250,236,.95);color:var(--forest);cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 16px rgba(80,60,30,.25);transition:transform .3s; pointer-events:auto;}
+.music svg{width:18px;height:18px}.music.on{animation:pl 2.4s ease-in-out infinite}
+@keyframes pl{50%{box-shadow:0 6px 16px rgba(80,60,30,.25),0 0 0 7px rgba(176,141,69,.2)}}
+.music::after {content:""; position:absolute; inset:-4px; border-radius:50%; border:1.5px solid var(--gold); opacity:0;}
+.music.on::after {animation: ripple 2s infinite ease-out;}
+@keyframes ripple { 0% {transform: scale(1); opacity:0.8;} 100% {transform: scale(1.6); opacity:0;} }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
+<svg width="0" height="0" style="position:absolute; visibility:hidden; pointer-events:none;" aria-hidden="true"><defs>
+<symbol id="floral-corner" viewBox="0 0 100 100">
+  <path d="M10 80 Q 40 70 80 20" fill="none" stroke="#283b2d" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 20 70 C 10 60 30 50 40 60 C 50 70 30 80 20 70" fill="#8ba58a" opacity="0.8"/>
+  <path d="M 45 50 C 35 35 60 30 70 45 C 80 60 55 65 45 50" fill="#283b2d"/>
+  <path d="M 65 25 C 60 15 80 5 90 15 C 100 25 70 35 65 25" fill="#8ba58a" opacity="0.8"/>
+  <g transform="translate(30 25) scale(0.6)">
+    <g fill="#fffaf0" stroke="#b08d45" stroke-width="1.2"><ellipse rx="8" ry="16" transform="translate(0 -12)"/><ellipse rx="8" ry="16" transform="rotate(72) translate(0 -12)"/><ellipse rx="8" ry="16" transform="rotate(144) translate(0 -12)"/><ellipse rx="8" ry="16" transform="rotate(216) translate(0 -12)"/><ellipse rx="8" ry="16" transform="rotate(288) translate(0 -12)"/></g><circle r="6" fill="#e6cc8c"/>
+  </g>
+</symbol>
+<symbol id="butterfly" viewBox="0 0 100 100">
+   <path d="M50 50 C 20 10, 0 30, 20 60 C 30 70, 50 50, 50 50 C 50 50, 70 70, 80 60 C 100 30, 80 10, 50 50 Z" fill="#b08d45" opacity="0.8"/>
+   <path d="M50 50 C 30 70, 20 90, 40 90 C 50 90, 50 50, 50 50 C 50 50, 50 90, 60 90 C 80 90, 70 70, 50 50 Z" fill="#e6cc8c" opacity="0.9"/>
+</symbol>
+</defs></svg>
 
-<div class="topbar">
-  <div class="brand">
-    <span>⚡ MT5 AI PRO TERMINAL v4.0</span>
-    <span style="color:var(--border)">|</span>
-    <span id="symHeader" style="color:#60a5fa">MENUNGGU MT5...</span>
-    <span id="connBadge" class="badge badge-off">BELUM TERSAMBUNG KE MT5</span>
-  </div>
+<div class="bg-texture"></div>
+<div class="glow"></div>
+<div class="sparkles" id="sparklesBox"></div>
+<svg id="ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49.5" fill="none" vector-effect="non-scaling-stroke"/></svg>
 
-  <div class="tf-group">
-    <button class="tf-btn active" id="tf_M1" onclick="setTF('M1')">M1</button>
-    <button class="tf-btn" id="tf_M5" onclick="setTF('M5')">M5</button>
-    <button class="tf-btn" id="tf_M15" onclick="setTF('M15')">M15</button>
-    <button class="tf-btn" id="tf_H1" onclick="setTF('H1')">H1</button>
-  </div>
-
-  <div class="top-actions">
-    <!-- AI AUTO-TRADE OFF SECARA DEFAULT SESUAI PERMINTAAN -->
-    <button id="aiBtn" class="btn btn-ai-toggle off" onclick="toggleAI()">🤖 AI AUTO-TRADE: OFF</button>
-    <button id="profitGuardBtn" class="btn off" style="cursor:pointer" onclick="toggleProfitGuard()">🛡️ PROFIT GUARD (BE+TRAIL): OFF</button>
-    <button class="btn" onclick="checkNow()">🔄 Refresh Koneksi</button>
-  </div>
-</div>
-
-<div class="workspace">
-
-  <!-- PANEL KIRI -->
-  <div class="panel">
-    <div class="panel-header">
-      <span>🧠 Analisis Visual AI & EA (Real-Time)</span>
-      <span id="aiActionBadge" class="badge badge-ai">STANDBY (OFF)</span>
+<main>
+<section class="slide active" id="cover">
+  <div class="wrap">
+    <p class="kicker fi" style="animation-delay:.2s" id="cvKicker"></p>
+    <h1 class="cname fi" style="animation-delay:.4s" id="cvName"></h1>
+    <div class="env floating" id="env" title="Ketuk untuk membuka">
+      <div class="eb"></div>
+      <div class="lt"><b id="cvInisial"></b><i></i></div>
+      <div class="pk"></div><div class="fp"></div>
+      <div class="seal" id="cvSeal"></div>
+      <div id="magicContainer" style="position:absolute; top:58%; left:50%;"></div>
     </div>
-    <div class="panel-body">
+    <button class="btn fi" id="btnOpen" type="button" style="animation-delay:1.2s; margin-top: 2vh;">Buka Undangan</button>
+  </div>
+</section>
 
-      <div class="radar-box">
-        <div class="gauge-grid">
-          <div class="gauge-card">
-            <div class="gauge-title">Confidence AI</div>
-            <div class="gauge-val bull-txt" id="aiConfVal">--%</div>
+<section class="slide" id="s1">
+  <div class="wrap">
+    <div class="paper-wrap">
+      <article class="paper">
+        <svg class="floral-corner-paper-tl"><use href="#floral-corner"/></svg>
+        <svg class="floral-corner-paper-br"><use href="#floral-corner"/></svg>
+        <p class="sal r" style="--d:.1s" id="txtSalam"></p>
+        <p class="r" style="--d:.2s" id="txtPembuka"></p>
+        
+        <div class="nm rs" style="--d:.3s" id="nmPria"></div>
+        <!-- GARIS DIHAPUS -->
+        <p class="r" style="--d:.5s; font-size: 0.85rem;" id="txtTengah"></p>
+        <div class="nm rs" style="--d:.6s" id="nmWanita"></div>
+        
+        <p class="r" style="--d:.7s" style="margin-top: 1.5vh;">pada tanggal <span class="dt" id="tglAkad"></span>.</p>
+        
+        <p class="r" style="--d:.9s" id="txtIsi"></p>
+        <p class="r" style="--d:1s"><span class="dt" id="tglResepsi"></span>.</p>
+        
+        <p class="r" style="--d:1.1s" id="txtPenutup"></p>
+        <p class="sal2 r" style="--d:1.2s" id="txtSalamAkhir"></p>
+        
+        <div style="margin-top:3vh; position:relative; z-index:2;"><button class="btn r" id="btnPhoto" type="button" style="--d:1.3s; padding: 1.5vh 5vh;">Lanjut</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s2">
+  <div class="bf-container"><div class="bf"><svg><use href="#butterfly"/></svg></div><div class="bf"><svg><use href="#butterfly"/></svg></div><div class="bf"><svg><use href="#butterfly"/></svg></div></div>
+  <div class="wrap">
+    <svg class="floral-bg"><use href="#floral-corner"/></svg>
+    <div style="text-align: center; margin-bottom: 1vh; z-index: 2; width: 100%;">
+      <p class="kicker r" style="--d:0.1s" id="galKicker"></p>
+      <h2 class="names-gal r" style="--d:0.2s" id="galName"></h2>
+    </div>
+    
+    <div class="diag-gallery">
+      <div class="diag-item diag-tl r floating" style="--d:0.3s">
+        <div class="photo-inner"><img id="foto1" class="img-blur" alt="Foto" draggable="false"></div>
+        <div class="photo-label" id="lblFoto1"></div>
+      </div>
+      <div class="diag-item diag-br r floating-del" style="--d:0.5s">
+        <div class="photo-inner"><img id="foto2" class="img-blur" alt="Foto" draggable="false"></div>
+        <div class="photo-label" id="lblFoto2"></div>
+      </div>
+    </div>
+    
+    <div style="margin-top: 1vh; z-index: 20; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; position: relative;">
+      <button class="btn r" id="btnGoToMengundang" type="button" style="--d:0.7s; padding: 0.8rem 1.2rem;">Turut Mengundang</button>
+      <button class="btn ghost r" id="btnBackToS1_fromS2" type="button" style="--d:0.8s; padding: 0.8rem 1.2rem;">Kembali</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s3">
+  <div class="wrap">
+    <svg class="floral-bg"><use href="#floral-corner"/></svg>
+    <div style="text-align: center; margin-bottom: 2vh; z-index: 2; width: 100%;">
+      <p class="kicker r" style="--d:0.1s">Kehormatan Kami</p>
+      <h2 class="names-gal r" style="--d:0.2s" style="font-size: clamp(2rem, 6vh, 2.5rem);">Turut Mengundang</h2>
+    </div>
+
+    <div class="inv-wrap r" style="--d:0.4s">
+      <ul class="inv-list" id="invList"></ul>
+    </div>
+
+    <div style="margin-top: 2vh; z-index: 10; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+      <button class="btn r" id="btnGoToAcara" type="button" style="--d:0.8s; padding: 0.8rem 1.2rem;">Info Acara</button>
+      <button class="btn ghost r" id="btnBackToS2_fromS3" type="button" style="--d:0.9s; padding: 0.8rem 1.2rem;">Kembali ke Galeri</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <div class="wrap">
+    <svg class="floral-bg"><use href="#floral-corner"/></svg>
+    <div class="s3-grid">
+      
+      <div class="cd-wrap r" style="--d:0.1s">
+        <div class="cd-title-count" id="cdTitle1"></div>
+        <div class="cd-title-days" id="cdTitle2"></div>
+        <div class="cd-box">
+          <div class="cd-inner" id="countdown">
+            <div class="cd-item"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div><span class="cd-sep">:</span>
+            <div class="cd-item"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div><span class="cd-sep">:</span>
+            <div class="cd-item"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div><span class="cd-sep">:</span>
+            <div class="cd-item"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
           </div>
-          <div class="gauge-card">
-            <div class="gauge-title">Bias Struktur</div>
-            <div class="gauge-val" id="aiBiasVal" style="color:#60a5fa">--</div>
+        </div>
+      </div>
+
+      <div class="cal-wrap r" style="--d:0.3s">
+        <h2 class="cal-title" id="calBulan"></h2>
+        <div class="cal-grid">
+          <div class="cal-day">Su</div><div class="cal-day">Mo</div><div class="cal-day">Tu</div><div class="cal-day">We</div><div class="cal-day">Th</div><div class="cal-day">Fr</div><div class="cal-day">Sa</div>
+          <div></div><div></div><div></div><div></div>
+          <div class="cal-date">1</div><div class="cal-date">2</div><div class="cal-date">3</div><div class="cal-date">4</div><div class="cal-date">5</div><div class="cal-date">6</div><div class="cal-date">7</div>
+          <div class="cal-date">8</div><div class="cal-date">9</div><div class="cal-date">10</div><div class="cal-date">11</div><div class="cal-date">12</div><div class="cal-date">13</div><div class="cal-date">14</div>
+          <div class="cal-date">15</div><div class="cal-date">16</div><div class="cal-date">17</div><div class="cal-date">18</div><div class="cal-date">19</div><div class="cal-date">20</div><div class="cal-date">21</div>
+          <div class="cal-date">22</div><div class="cal-date">23</div><div class="cal-date">24</div><div class="cal-date">25</div><div class="cal-date">26</div><div class="cal-date cal-mark" id="calTanggal"></div><div class="cal-date">28</div>
+          <div class="cal-date">29</div><div class="cal-date">30</div><div class="cal-date">31</div>
+        </div>
+      </div>
+
+      <div class="map-wrap r floating" style="--d:0.5s">
+        <div class="map-env">
+          <div class="map-oval">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <p id="alamatName"></p>
+            <a href="#" id="btnMaps" class="map-btn">Buka Maps</a>
           </div>
         </div>
-
-        <div class="meter-row">
-          <div class="meter-head"><span>BUY POWER SCORE</span><span id="buyScoreTxt" class="bull-txt">0.0 / 45</span></div>
-          <div class="progress">
-            <div id="minBuyLine" class="threshold-line" style="left:45%"></div>
-            <div id="buyBar" class="progress-bar" style="width:0%;background:var(--buy)"></div>
-          </div>
-        </div>
-        <div class="meter-row">
-          <div class="meter-head"><span>SELL POWER SCORE</span><span id="sellScoreTxt" class="bear-txt">0.0 / 45</span></div>
-          <div class="progress">
-            <div id="minSellLine" class="threshold-line" style="left:45%"></div>
-            <div id="sellBar" class="progress-bar" style="width:0%;background:var(--sell)"></div>
-          </div>
-        </div>
       </div>
-
-      <div class="radar-box">
-        <div style="font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Matriks Konfluensi Sinyal Real</div>
-        <div class="matrix-grid">
-          <div class="matrix-cell">EMA Cross<b id="mxEma" class="neut-txt">--</b></div>
-          <div class="matrix-cell">RSI (14)<b id="mxRsi" class="neut-txt">--</b></div>
-          <div class="matrix-cell">Bollinger<b id="mxBB" class="neut-txt">--</b></div>
-          <div class="matrix-cell">ATR Range<b id="mxAtr" class="neut-txt">--</b></div>
-          <div class="matrix-cell">Zona S/R<b id="mxSR" class="neut-txt">--</b></div>
-          <div class="matrix-cell">Sinyal AI<b id="mxRec" class="neut-txt">WAIT</b></div>
-        </div>
-      </div>
-
-      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">👁️ Indikator Visual di Chart</div>
-      <div class="ind-toggles">
-        <label class="ind-check"><input type="checkbox" id="chkEMA" checked onchange="drawChart()"> EMA Fast & Mid</label>
-        <label class="ind-check"><input type="checkbox" id="chkBB" checked onchange="drawChart()"> Bollinger Bands</label>
-        <label class="ind-check"><input type="checkbox" id="chkSR" checked onchange="drawChart()"> Zona Supp/Res</label>
-        <label class="ind-check"><input type="checkbox" id="chkRSI" checked onchange="drawChart()"> Sub-Chart RSI</label>
-      </div>
-
-      <div class="form-card">
-        <div class="form-row"><span>Periode EMA Fast / Mid:</span>
-          <div style="display:flex;gap:4px;">
-            <input type="number" id="inpEmaFast" value="12" style="width:52px" onchange="drawChart()">
-            <input type="number" id="inpEmaMid" value="34" style="width:52px" onchange="drawChart()">
-          </div>
-        </div>
-        <div class="form-row"><span>Ambang Skor AI Entry:</span>
-          <input type="number" id="inpMinScore" value="45" min="25" max="90">
-        </div>
-        <div class="form-row"><span>Maks Posisi AI Aktif:</span>
-          <input type="number" id="inpMaxPos" value="2" min="1" max="10">
-        </div>
-        <div class="form-row"><span>Strategi Order AI:</span>
-          <select id="inpAiMode">
-            <option value="MARKET_ONLY">Eksekusi Market Langsung</option>
-            <option value="ALL">Market + Limit + Stop</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="radar-box" style="font-size:11px;line-height:1.4;color:#cbd5e1;">
-        <b style="color:#a78bfa">🤖 Status & Logika AI:</b><br>
-        <span id="aiThoughtTxt">AI Auto-Trade sedang OFF. Nyalakan tombol AI di atas jika ingin AI mengeksekusi order otomatis ke MT5.</span>
-      </div>
-
+      
+      <div class="s3-bottom r" style="--d:0.7s"><button class="btn ghost" id="btnBackToS3_fromS4" type="button">Kembali</button></div>
     </div>
   </div>
+</section>
 
-  <!-- PANEL TENGAH: CHART REAL MT5 -->
-  <div class="panel">
-    <div class="panel-header">
-      <span id="chartHeaderTitle">📈 Live Chart MT5 — Menunggu Data...</span>
-      <span id="timeVal">--:--:--</span>
-    </div>
-    <div class="chart-container">
-      <canvas id="mainChart"></canvas>
-      <div class="chart-hud" id="chartHud" style="display:none;">
-        <div><b id="hudPrice" style="color:#fff;font-size:13px;">--</b> <span id="hudSpread" style="color:var(--muted)">(Spread: --)</span></div>
-        <div style="color:#38bdf8">━ EMA Fast: <span id="hudEmaF">--</span> &nbsp; <span style="color:#f59e0b">━ EMA Mid: <span id="hudEmaM">--</span></span></div>
-        <div style="color:#a855f7">┈ Bollinger (20, 2) &nbsp; <span style="color:#10b981">█ Support / Resistance</span></div>
-      </div>
-
-      <!-- Layar Pengaman ketika Belum Terhubung (TIDAK ADA MARKET PALSU) -->
-      <div id="disconnOverlay" class="disconnected-overlay">
-        <h2 style="color:#f87171;margin-bottom:8px;">⚠️ Belum Tersambung ke MetaTrader 5</h2>
-        <p style="color:var(--muted);max-width:480px;font-size:13px;line-height:1.5;margin-bottom:14px;">
-          Sesuai permintaanmu, <b>tidak ada market simulasi/palsu yang ditampilkan</b>. Grafik dan harga hanya muncul saat data asli dari MT5 diterima.
-        </p>
-        <div style="background:#151a26;border:1px solid var(--border);padding:12px 16px;border-radius:8px;text-align:left;font-size:12px;line-height:1.6;color:#cbd5e1;">
-          <b>Pastikan 2 hal ini sudah jalan:</b><br>
-          1. Di CMD Windows, jalankan: <code>python bridge_server.py</code><br>
-          2. Di MetaTrader 5, compile & pasang <b>EAFIX_v2_10_FastBridge (v4.0)</b> pada chart, serta aktifkan tombol <b>Algo Trading</b>.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PANEL KANAN: EKSEKUSI KE MT5 -->
-  <div class="panel">
-    <div class="panel-header">
-      <span>⚡ Eksekusi Order Riil ke MT5</span>
-      <span id="accEqTop" class="bull-txt">$0.00</span>
-    </div>
-    <div class="panel-body">
-
-      <div class="price-banner">
-        <div class="p-box sell"><small>HARGA BID (SELL)</small><b id="bidVal">--</b></div>
-        <div class="p-box buy"><small>HARGA ASK (BUY)</small><b id="askVal">--</b></div>
-      </div>
-
-      <div class="form-card">
-        <div class="form-row"><span>Volume (Lot):</span><input type="number" id="ordLots" value="0.02" step="0.01" min="0.01"></div>
-        <div class="form-row"><span>Jarak SL (Harga/Offset):</span><input type="number" id="ordSL" value="150.0" step="10.0"></div>
-        <div class="form-row"><span>Jarak TP (Harga/Offset):</span><input type="number" id="ordTP" value="250.0" step="10.0"></div>
-        <div class="form-row"><span>Mode Input SL/TP:</span>
-          <select id="slTpMode">
-            <option value="DIST">Jarak Selisih Harga (Otomatis)</option>
-            <option value="EXACT">Level Harga Eksak</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">1. Eksekusi Instan (Market Order MT5)</div>
-      <div class="btn-grid-2">
-        <button class="exec-btn sell" onclick="placeOrder('SELL')">
-          <span>MARKET SELL</span><small>Kirim ke MT5</small>
-        </button>
-        <button class="exec-btn buy" onclick="placeOrder('BUY')">
-          <span>MARKET BUY</span><small>Kirim ke MT5</small>
-        </button>
-      </div>
-
-      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-top:2px;">2. Pending Order (Buy/Sell Limit & Stop)</div>
-      <div class="form-card">
-        <div class="form-row">
-          <span>Jarak Selisih Harga Pending:</span>
-          <input type="number" id="pendOffset" value="100.0" step="10.0">
-        </div>
-        <div class="btn-grid-2">
-          <button class="exec-btn pending-buy" onclick="placeOrder('BUY_LIMIT')">
-            <span>BUY LIMIT</span><small>Bid - Jarak</small>
-          </button>
-          <button class="exec-btn pending-sell" onclick="placeOrder('SELL_LIMIT')">
-            <span>SELL LIMIT</span><small>Ask + Jarak</small>
-          </button>
-          <button class="exec-btn pending-buy" onclick="placeOrder('BUY_STOP')">
-            <span>BUY STOP</span><small>Ask + Jarak</small>
-          </button>
-          <button class="exec-btn pending-sell" onclick="placeOrder('SELL_STOP')">
-            <span>SELL STOP</span><small>Bid - Jarak</small>
-          </button>
-        </div>
-      </div>
-
-      <div class="btn-grid-2" style="margin-top:auto;">
-        <button class="btn" style="border-color:#22ab94;color:#22ab94" onclick="sendCommand('CLOSE_PROFIT', '0')">💰 Panen Profit Saja</button>
-        <button class="btn" style="border-color:#f23645;color:#fca5a5" onclick="sendCommand('CLOSE_ALL', '0')">✖ Close All & Batal</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- PANEL BAWAH: POSISI TERBUKA ASLI MT5 -->
-  <div class="toolbox">
-    <div class="tabs">
-      <div class="tab active" id="tabBtnPos" onclick="switchTab('pos')">Posisi Terbuka MT5 (<span id="cntPos">0</span>)</div>
-      <div class="tab" id="tabBtnPend" onclick="switchTab('pend')">Pending Orders MT5 (<span id="cntPend">0</span>)</div>
-      <div class="tab" id="tabBtnHist" onclick="switchTab('hist')">Log Eksekusi & AI (<span id="cntHist">0</span>)</div>
-      <div style="margin-left:auto;font-size:11.5px;display:flex;gap:14px;padding-right:8px;">
-        <span>Balance: <b id="balVal">$0.00</b></span>
-        <span>Equity: <b id="eqVal">$0.00</b></span>
-        <span>Floating P/L: <b id="fltVal" class="pnl-pos">$0.00</b></span>
-      </div>
-    </div>
-
-    <div class="panel-body" id="tabPos" style="padding:0">
-      <table>
-        <thead>
-          <tr><th>Ticket MT5</th><th>Simbol</th><th>Tipe</th><th>Lot</th><th>Harga Entry</th><th>Stop Loss (SL)</th><th>Take Profit (TP)</th><th>Komentar</th><th>Profit Real (USD)</th><th>Aksi</th></tr>
-        </thead>
-        <tbody id="posBody"></tbody>
-      </table>
-    </div>
-
-    <div class="panel-body" id="tabPend" style="padding:0;display:none">
-      <table>
-        <thead>
-          <tr><th>Ticket Order</th><th>Simbol</th><th>Tipe Pending</th><th>Lot</th><th>Harga Trigger</th><th>SL</th><th>TP</th><th>Komentar</th><th>Aksi</th></tr>
-        </thead>
-        <tbody id="pendBody"></tbody>
-      </table>
-    </div>
-
-    <div class="panel-body" id="tabHist" style="display:none;font-family:Consolas,monospace;font-size:11px;">
-      <div id="logList" style="display:flex;flex-direction:column;gap:4px;"></div>
-    </div>
-  </div>
-
-</div>
+</main>
+<button class="music" id="btnMusic" type="button" aria-label="Putar musik"><svg id="icPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg id="icPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
 
 <script>
-  const serverUrl = 'http://127.0.0.1:8787';
-  let isConnected = false;
+/* ===============================================================
+   KONFIGURASI DEFAULT / FALLBACK
+=============================================================== */
+var cfg = {
+  title: "The Wedding of Andre & Shella", kicker: "The Wedding of",
+  nPria: "Andre Irawan", nWanita: "Shella Trisnawati", nPendek: "Andre & Shella", inisial: "A & S",
+  txtSalam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
+  txtPembuka: "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara resepsi pernikahan putra-putri kami:",
+  txtTengah: "dengan",
+  txtIsi: "(Telah melangsungkan akad nikah pada tanggal 16 Oktober 2026). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
+  txtPenutup: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
+  txtSalamAkhir: "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
+  tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
+  galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai Pria", lblFoto2: "Andre & Shella",
+  
+  // DEFAULT 6 DAFTAR TAMU
+  mengundang: [
+    { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }, 
+    { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
+    { nama: "Bos Wawan Hermawan", desc: "C.E.O PT Senang Jaya Abadi" }, 
+    { nama: "Pa Philipp", desc: "C.E.O PT Hasema Philipp" },
+    { nama: "Keluarga Besar Bpk. Sutrisno", desc: "Riau" },
+    { nama: "Keluarga Bp. Sumar (Alm)", desc: "Tangerang" }
+  ],
 
-  // DEFAULT OFF SESUAI PERMINTAAN!
-  let aiAutoTrade = false;
-  let profitGuard = false;
-  let lastAiTradeTime = 0;
-  let lastGuardModTime = {};
+  cdTitle1: "MENJELANG", cdTitle2: "HARI - H", targetDate: "2026-10-27T08:00:00",
+  calBulan: "Oktober", calTanggal: "27", gdg: "Alamat Resepsi", 
+  map: "https://www.google.com/maps/place/7%C2%B031'33.5%22S+109%C2%B003'13.0%22E/@-7.52598,109.0510369,17z",
+  f1: "pama.jpeg", f2: "mempelai.jpeg", musik: "musik-undangan.mp3"
+};
 
-  // State kosong tanpa harga palsu
-  let state = {
-    connected: false,
-    symbol: '-',
-    tf: 'M1',
-    digits: 2,
-    point: 0.01,
-    time: '--:--:--',
-    bid: 0,
-    ask: 0,
-    spread: 0,
-    balance: 0,
-    equity: 0,
-    floating: 0,
-    buyScore: 0,
-    sellScore: 0,
-    minScore: 45,
-    atrVal: 0,
-    positions: [],
-    pending: [],
-    candles: []
-  };
+(function(){
+  "use strict";
+  var $ = function(id) { return document.getElementById(id); };
+  var root = document.documentElement;
+  var st = { slide: "cover", busy: false, music: false };
 
-  function addLog(msg, color = '#d8dee9') {
-    const list = document.getElementById('logList');
-    const div = document.createElement('div');
-    div.style.padding = '3px 6px';
-    div.style.background = '#151a26';
-    div.style.borderRadius = '3px';
-    div.style.color = color;
-    div.textContent = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
-    list.prepend(div);
-    if (list.children.length > 80) list.removeChild(list.lastChild);
-    document.getElementById('cntHist').textContent = list.children.length;
-  }
+  /* SINKRONISASI DATA DARI ADMIN PANEL (LOCAL STORAGE) */
+  try {
+    const localCfg = JSON.parse(localStorage.getItem("wed_cfg"));
+    if (localCfg) Object.assign(cfg, localCfg);
+  } catch(e) {}
 
-  function switchTab(tab) {
-    document.getElementById('tabPos').style.display = tab === 'pos' ? 'block' : 'none';
-    document.getElementById('tabPend').style.display = tab === 'pend' ? 'block' : 'none';
-    document.getElementById('tabHist').style.display = tab === 'hist' ? 'block' : 'none';
-    document.getElementById('tabBtnPos').classList.toggle('active', tab === 'pos');
-    document.getElementById('tabBtnPend').classList.toggle('active', tab === 'pend');
-    document.getElementById('tabBtnHist').classList.toggle('active', tab === 'hist');
-  }
-
-  function toggleAI() {
-    if (!isConnected) {
-      alert('Tidak bisa menyalakan AI sebelum terhubung ke MetaTrader 5!');
-      return;
+  var sparkBox = $("sparklesBox");
+  if(sparkBox) {
+    for(var i=0; i<25; i++) {
+      var d = document.createElement("div"); d.className = "sparkle";
+      d.style.left = Math.random() * 100 + "vw";
+      d.style.animationDuration = (Math.random() * 6 + 4) + "s, " + (Math.random() * 2 + 2) + "s";
+      d.style.animationDelay = "-" + (Math.random() * 5) + "s, 0s";
+      sparkBox.appendChild(d);
     }
-    aiAutoTrade = !aiAutoTrade;
-    const btn = document.getElementById('aiBtn');
-    btn.textContent = aiAutoTrade ? '🤖 AI AUTO-TRADE: ON' : '🤖 AI AUTO-TRADE: OFF';
-    btn.classList.toggle('off', !aiAutoTrade);
-    document.getElementById('aiActionBadge').textContent = aiAutoTrade ? 'AI ACTIVE' : 'STANDBY (OFF)';
-    addLog(`AI Auto-Trade ${aiAutoTrade ? 'DINYALAKAN (Mengendalikan MT5)' : 'DIMATIKAN'}.`, aiAutoTrade ? '#22ab94' : '#f59e0b');
   }
 
-  function toggleProfitGuard() {
-    if (!isConnected) {
-      alert('Sambungkan ke MT5 terlebih dahulu!');
-      return;
+  function burstMagic() {
+    var c = $("magicContainer"); if(!c) return;
+    for(var i=0; i<15; i++) {
+      var d = document.createElement("div"); d.className = "magic-dust";
+      var angle = Math.random() * Math.PI * 2; var dist = Math.random() * 60 + 30;
+      d.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+      d.style.setProperty("--ty", Math.sin(angle) * dist + "px");
+      d.style.animation = "burst 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards";
+      c.appendChild(d);
     }
-    profitGuard = !profitGuard;
-    const btn = document.getElementById('profitGuardBtn');
-    btn.textContent = profitGuard ? '🛡️ PROFIT GUARD (BE+TRAIL): ON' : '🛡️ PROFIT GUARD (BE+TRAIL): OFF';
-    btn.className = 'btn ' + (profitGuard ? 'badge-live' : 'off');
-    addLog(`Profit Guard (Auto Break-Even & Trailing SL di MT5) ${profitGuard ? 'AKTIF' : 'NONAKTIF'}.`, '#38bdf8');
   }
 
-  function setTF(tf) {
-    if (!isConnected) return;
-    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById('tf_' + tf);
-    if (btn) btn.classList.add('active');
-    sendCommand('SET_TF', tf);
-    addLog(`Meminta MT5 mengganti Timeframe ke ${tf}...`, '#60a5fa');
-  }
-
-  async function sendCommand(action, param) {
-    if (!isConnected && action !== 'SET_TF') {
-      alert('Belum terhubung ke MetaTrader 5! Pastikan bridge_server.py dan EA di MT5 sudah aktif.');
-      return;
-    }
-    const cmdLine = `${Date.now()}${Math.floor(Math.random()*90+10)}|${action}|${param}`;
+  function renderData() {
     try {
-      await fetch(serverUrl + '/cmd', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cmd: cmdLine })
-      });
-      addLog(`Perintah dikirim ke MT5: [${action}] -> ${param}`, '#60a5fa');
-    } catch (e) {
-      addLog(`Gagal mengirim perintah [${action}]: Server Python tidak merespons.`, '#f87171');
-    }
-  }
-
-  // === PERHITUNGAN INDIKATOR DARI CANDLE ASLI MT5 ===
-  function calcEMA(candles, period) {
-    let k = 2 / (period + 1);
-    let arr = [];
-    let ema = candles[0].close;
-    for (let i = 0; i < candles.length; i++) {
-      ema = candles[i].close * k + ema * (1 - k);
-      arr.push(ema);
-    }
-    return arr;
-  }
-
-  function calcBollinger(candles, period = 20, mult = 2.0) {
-    let up = [], mid = [], lo = [];
-    for (let i = 0; i < candles.length; i++) {
-      if (i < period - 1) {
-        up.push(candles[i].close); mid.push(candles[i].close); lo.push(candles[i].close);
-        continue;
+      document.title = cfg.title || "Undangan Pernikahan";
+      if($("cvKicker")) $("cvKicker").textContent = cfg.kicker || "";
+      if($("cvName")) $("cvName").innerHTML = (cfg.nPria || "") + "<small>&amp;</small>" + (cfg.nWanita || "");
+      if($("cvInisial")) {
+        var inisial = cfg.inisial || "A & S"; var parts = inisial.split(" & ");
+        $("cvInisial").innerHTML = parts.length > 1 ? parts[0] + " <span>&</span> " + parts[1] : inisial;
       }
-      let sum = 0;
-      for (let j = i - period + 1; j <= i; j++) sum += candles[j].close;
-      let m = sum / period;
-      let v = 0;
-      for (let j = i - period + 1; j <= i; j++) v += Math.pow(candles[j].close - m, 2);
-      let sd = Math.sqrt(v / period);
-      mid.push(m); up.push(m + mult * sd); lo.push(m - mult * sd);
-    }
-    return { up, mid, lo };
-  }
+      if($("cvSeal")) $("cvSeal").textContent = (cfg.inisial || "").replace(/\s+/g, '');
+      if($("nmPria")) $("nmPria").textContent = cfg.nPria || "";
+      if($("nmWanita")) $("nmWanita").textContent = cfg.nWanita || "";
+      if($("nmPendek")) $("nmPendek").textContent = cfg.nPendek || "";
+      if($("txtSalam")) $("txtSalam").textContent = cfg.txtSalam || "";
+      if($("txtPembuka")) $("txtPembuka").textContent = cfg.txtPembuka || "";
+      if($("txtTengah")) $("txtTengah").textContent = cfg.txtTengah || "";
+      if($("txtIsi")) $("txtIsi").textContent = cfg.txtIsi || "";
+      if($("txtPenutup")) $("txtPenutup").textContent = cfg.txtPenutup || "";
+      if($("txtSalamAkhir")) $("txtSalamAkhir").textContent = cfg.txtSalamAkhir || "";
+      if($("tglAkad")) $("tglAkad").style.display = "none"; 
+      if($("tglResepsi")) $("tglResepsi").textContent = cfg.tResepsi || "";
+      if($("galKicker")) $("galKicker").textContent = cfg.galKicker || "";
+      if($("galName")) $("galName").innerHTML = (cfg.kicker || "") + "<br><span id='nmPendek'>" + (cfg.nPendek || "") + "</span>";
+      if($("lblFoto1")) $("lblFoto1").innerHTML = cfg.lblFoto1 || "";
+      if($("lblFoto2")) $("lblFoto2").innerHTML = cfg.lblFoto2 || "";
+      if($("cdTitle1")) $("cdTitle1").textContent = cfg.cdTitle1 || "";
+      if($("cdTitle2")) $("cdTitle2").textContent = cfg.cdTitle2 || "";
+      if($("calBulan")) $("calBulan").textContent = cfg.calBulan || "";
+      if($("calTanggal")) $("calTanggal").textContent = cfg.calTanggal || "";
+      if($("alamatName")) $("alamatName").textContent = cfg.gdg || "";
 
-  function calcRSI(candles, period = 14) {
-    let arr = new Array(candles.length).fill(50);
-    if (candles.length <= period) return arr;
-    let gains = 0, losses = 0;
-    for (let i = 1; i <= period; i++) {
-      let d = candles[i].close - candles[i - 1].close;
-      if (d >= 0) gains += d; else losses -= d;
-    }
-    let avgG = gains / period, avgL = losses / period;
-    for (let i = period; i < candles.length; i++) {
-      if (i > period) {
-        let d = candles[i].close - candles[i - 1].close;
-        avgG = (avgG * (period - 1) + (d > 0 ? d : 0)) / period;
-        avgL = (avgL * (period - 1) + (d < 0 ? -d : 0)) / period;
+      var invListHtml = "";
+      if(cfg.mengundang && Array.isArray(cfg.mengundang)) {
+        cfg.mengundang.forEach(function(inv, idx) {
+            invListHtml += "<li class='inv-item r' style='--d:" + (0.4 + (idx * 0.1)) + "s'><div class='inv-name'>" + inv.nama + "</div><div class='inv-desc'>" + inv.desc + "</div></li>";
+        });
       }
-      let rs = avgL === 0 ? 100 : avgG / avgL;
-      arr[i] = 100 - (100 / (1 + rs));
-    }
-    return arr;
+      if($("invList")) $("invList").innerHTML = invListHtml;
+    } catch(e) {}
   }
 
-  function calcATR(candles, period = 14) {
-    if (candles.length < 2) return 10;
-    let sum = 0, cnt = 0;
-    for (let i = Math.max(1, candles.length - period); i < candles.length; i++) {
-      let tr = Math.max(
-        candles[i].high - candles[i].low,
-        Math.abs(candles[i].high - candles[i - 1].close),
-        Math.abs(candles[i].low - candles[i - 1].close)
-      );
-      sum += tr; cnt++;
-    }
-    return cnt > 0 ? sum / cnt : 10;
-  }
-
-  function calcSupportResistance(candles) {
-    let recent = candles.slice(-35);
-    let hi = -Infinity, lo = Infinity;
-    recent.forEach(c => { if (c.high > hi) hi = c.high; if (c.low < lo) lo = c.low; });
-    return { res: hi, sup: lo };
-  }
-
-  // === EKSEKUSI ORDER MANUAL & AI KE MT5 ===
-  function computeSLTP(dir, entryPrice, atrFallback = 0) {
-    const d = state.digits || 2;
-    const mode = document.getElementById('slTpMode').value;
-    let rawSL = parseFloat(document.getElementById('ordSL').value) || 0;
-    let rawTP = parseFloat(document.getElementById('ordTP').value) || 0;
-    if (atrFallback > 0) {
-      rawSL = +(atrFallback * 1.6).toFixed(d);
-      rawTP = +(atrFallback * 2.6).toFixed(d);
-    }
-    let sl = 0, tp = 0;
-    if (mode === 'DIST' || atrFallback > 0) {
-      if (rawSL > 0) sl = +(entryPrice - dir * rawSL).toFixed(d);
-      if (rawTP > 0) tp = +(entryPrice + dir * rawTP).toFixed(d);
-    } else {
-      sl = +rawSL.toFixed(d);
-      tp = +rawTP.toFixed(d);
-    }
-    return { sl, tp };
-  }
-
-  function placeOrder(type, customLots = null, customPrice = null, src = 'WEB_MANUAL', useAtrSLTP = false) {
-    if (!isConnected || state.bid <= 0) {
-      alert('Tunggu koneksi harga asli dari MT5 terlebih dahulu!');
-      return;
-    }
-    const d = state.digits || 2;
-    const lots = customLots || parseFloat(document.getElementById('ordLots').value) || 0.01;
-    const offsetVal = parseFloat(document.getElementById('pendOffset').value) || (state.atrVal || 50);
-
-    if (type === 'BUY' || type === 'SELL') {
-      const dir = type === 'BUY' ? 1 : -1;
-      const entry = dir > 0 ? state.ask : state.bid;
-      const { sl, tp } = computeSLTP(dir, entry, useAtrSLTP ? state.atrVal : 0);
-      sendCommand(type, `${lots},${sl},${tp},${src}`);
-      return;
-    }
-
-    const isBuy = type.startsWith('BUY');
-    const dir = isBuy ? 1 : -1;
-    let trigPx = customPrice;
-    if (!trigPx) {
-      if (type === 'BUY_LIMIT') trigPx = state.bid - offsetVal;
-      else if (type === 'SELL_LIMIT') trigPx = state.ask + offsetVal;
-      else if (type === 'BUY_STOP') trigPx = state.ask + offsetVal;
-      else if (type === 'SELL_STOP') trigPx = state.bid - offsetVal;
-    }
-    trigPx = +trigPx.toFixed(d);
-    const { sl, tp } = computeSLTP(dir, trigPx, useAtrSLTP ? state.atrVal : 0);
-    sendCommand(type, `${lots},${trigPx},${sl},${tp},${src}`);
-  }
-
-  // === ANALISIS AI REAL-TIME & KONTROL MT5 ===
-  function evaluateRealMarketAndAI() {
-    const candles = state.candles;
-    if (!candles || candles.length < 20) return;
-
-    const pFast = parseInt(document.getElementById('inpEmaFast').value) || 12;
-    const pMid = parseInt(document.getElementById('inpEmaMid').value) || 34;
-    const emaF = calcEMA(candles, pFast);
-    const emaM = calcEMA(candles, pMid);
-    const bb = calcBollinger(candles, 20, 2.0);
-    const rsiArr = calcRSI(candles, 14);
-    const atr = calcATR(candles, 14);
-    const sr = calcSupportResistance(candles);
-    state.atrVal = atr;
-
-    const n = candles.length - 1;
-    const c1 = candles[n], c2 = candles[n - 1];
-    const ef = emaF[n], em = emaM[n];
-    const rsi = rsiArr[n], rsiPrev = rsiArr[n - 1];
-
-    // Skor Konfluensi Murni dari Data MT5
-    let bScore = 15, sScore = 15;
-    if (ef > em) bScore += 20; else sScore += 20;
-    if (c1.close > ef) bScore += 12; else sScore += 12;
-    if (c1.close > c1.open && c1.close > c2.high) bScore += 16;
-    if (c1.close < c1.open && c1.close < c2.low) sScore += 16;
-    if (rsi > rsiPrev && rsi > 45 && rsi < 72) bScore += 14;
-    if (rsi < rsiPrev && rsi < 55 && rsi > 28) sScore += 14;
-    if (c1.low <= bb.lo[n] + atr * 0.25 && c1.close > c1.open) bScore += 18;
-    if (c1.high >= bb.up[n] - atr * 0.25 && c1.close < c1.open) sScore += 18;
-
-    state.buyScore = Math.min(99, +bScore.toFixed(1));
-    state.sellScore = Math.min(99, +sScore.toFixed(1));
-    state.minScore = parseFloat(document.getElementById('inpMinScore').value) || 45;
-
-    // Update UI Indikator
-    const d = state.digits || 2;
-    document.getElementById('mxEma').textContent = ef > em ? 'BULL' : 'BEAR';
-    document.getElementById('mxEma').className = ef > em ? 'bull-txt' : 'bear-txt';
-    document.getElementById('mxRsi').textContent = rsi.toFixed(1);
-    document.getElementById('mxBB').textContent = c1.close > bb.mid[n] ? 'UPPER' : 'LOWER';
-    document.getElementById('mxAtr').textContent = atr.toFixed(d);
-    document.getElementById('mxSR').textContent = (c1.close - sr.sup < sr.res - c1.close) ? 'SUPP' : 'RES';
-
-    const conf = Math.round(Math.max(state.buyScore, state.sellScore));
-    document.getElementById('aiConfVal').textContent = conf + '%';
-    const isBull = state.buyScore >= state.sellScore;
-    document.getElementById('aiBiasVal').textContent = isBull ? 'BULLISH' : 'BEARISH';
-    document.getElementById('aiBiasVal').style.color = isBull ? '#22ab94' : '#f23645';
-    document.getElementById('mxRec').textContent = state.buyScore >= state.minScore ? 'BUY' : (state.sellScore >= state.minScore ? 'SELL' : 'WAIT');
-    document.getElementById('mxRec').className = state.buyScore >= state.minScore ? 'bull-txt' : (state.sellScore >= state.minScore ? 'bear-txt' : 'neut-txt');
-
-    document.getElementById('hudEmaF').textContent = ef.toFixed(d);
-    document.getElementById('hudEmaM').textContent = em.toFixed(d);
-
-    // 1. PROFIT GUARD REAL MT5 (Geser SL ke Break-Even & Trailing otomatis di MT5)
-    if (profitGuard && state.positions.length > 0 && atr > 0) {
-      const spreadPrice = state.ask - state.bid;
-      state.positions.forEach(p => {
-        const dir = p.type === 'BUY' ? 1 : -1;
-        const curPx = dir > 0 ? state.bid : state.ask;
-        const move = (curPx - p.open) * dir;
-        const lastMod = lastGuardModTime[p.ticket] || 0;
-        if (Date.now() - lastMod < 4000) return;
-
-        // Break-Even Lock saat harga bergerak >= 0.9 ATR
-        if (move >= atr * 0.9) {
-          const beSL = +(p.open + dir * (spreadPrice + atr * 0.15)).toFixed(d);
-          const needUpdate = (dir > 0 && (p.sl === 0 || p.sl < beSL - state.point * 5)) ||
-                             (dir < 0 && (p.sl === 0 || p.sl > beSL + state.point * 5));
-          if (needUpdate) {
-            lastGuardModTime[p.ticket] = Date.now();
-            sendCommand('MODIFY_SLTP', `${p.ticket},${beSL},${p.tp}`);
-            addLog(`🛡️ [PROFIT GUARD] Menggeser SL #${p.ticket} di MT5 ke Break-Even+ (${beSL})`, '#22ab94');
-          }
-        }
-        // Trailing Stop saat harga profit >= 1.5 ATR
-        if (move >= atr * 1.5) {
-          const trailSL = +(curPx - dir * (atr * 0.85)).toFixed(d);
-          const better = (dir > 0 && trailSL > p.sl + atr * 0.2) || (dir < 0 && (p.sl === 0 || trailSL < p.sl - atr * 0.2));
-          if (better) {
-            lastGuardModTime[p.ticket] = Date.now();
-            sendCommand('MODIFY_SLTP', `${p.ticket},${trailSL},${p.tp}`);
-            addLog(`🚀 [TRAILING GUARD] Mengunci profit #${p.ticket} di MT5, SL baru: ${trailSL}`, '#38bdf8');
-          }
-        }
-      });
-    }
-
-    // 2. EKSEKUSI OTOMATIS AI KE MT5 (Hanya jalan jika tombol AI ON!)
-    if (!aiAutoTrade) return;
-
-    const maxPos = parseInt(document.getElementById('inpMaxPos').value) || 2;
-    const now = Date.now();
-    if (now - lastAiTradeTime < 8000) return; // Cooldown 8 detik antar eksekusi AI
-
-    if (state.positions.length >= maxPos) {
-      document.getElementById('aiThoughtTxt').textContent = `Posisi aktif (${state.positions.length}/${maxPos}) sudah penuh. AI memantau SL/TP & Profit Guard.`;
-      return;
-    }
-
-    const lots = parseFloat(document.getElementById('ordLots').value) || 0.02;
-    const aiMode = document.getElementById('inpAiMode').value;
-
-    if (state.buyScore >= state.minScore && state.buyScore > state.sellScore + 8) {
-      lastAiTradeTime = now;
-      document.getElementById('aiActionBadge').textContent = 'AI BUYING MT5';
-      document.getElementById('aiThoughtTxt').textContent = `Sinyal BUY Valid (Skor ${state.buyScore} >= ${state.minScore}). Mengirim perintah Market BUY ke MT5!`;
-      placeOrder('BUY', lots, null, 'AI_AUTO_BUY', true);
-
-      if (aiMode === 'ALL' && state.pending.length === 0) {
-        placeOrder('BUY_LIMIT', lots, +(state.bid - atr * 1.2).toFixed(d), 'AI_BUY_LIM', true);
-      }
-    } else if (state.sellScore >= state.minScore && state.sellScore > state.buyScore + 8) {
-      lastAiTradeTime = now;
-      document.getElementById('aiActionBadge').textContent = 'AI SELLING MT5';
-      document.getElementById('aiThoughtTxt').textContent = `Sinyal SELL Valid (Skor ${state.sellScore} >= ${state.minScore}). Mengirim perintah Market SELL ke MT5!`;
-      placeOrder('SELL', lots, null, 'AI_AUTO_SELL', true);
-
-      if (aiMode === 'ALL' && state.pending.length === 0) {
-        placeOrder('SELL_LIMIT', lots, +(state.ask + atr * 1.2).toFixed(d), 'AI_SELL_LIM', true);
-      }
-    } else {
-      document.getElementById('aiActionBadge').textContent = 'AI SCANNING';
-      document.getElementById('aiThoughtTxt').textContent = `AI aktif memindai MT5 (${state.symbol} ${state.tf}). Skor BUY=${state.buyScore}, SELL=${state.sellScore} (Target >= ${state.minScore}).`;
-    }
-  }
-
-  // === RENDER UI & GRAFIK SKALA PRESISI ===
-  function renderAll() {
-    const d = state.digits || 2;
-    document.getElementById('symHeader').textContent = `${state.symbol} (${state.tf})`;
-    document.getElementById('chartHeaderTitle').textContent = `📈 Live Chart ${state.symbol} (${state.tf}) — Real-Time MT5 Feed`;
-    document.getElementById('timeVal').textContent = state.time;
-
-    // Sinkronkan tombol TF aktif
-    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
-    const activeTfBtn = document.getElementById('tf_' + state.tf);
-    if (activeTfBtn) activeTfBtn.classList.add('active');
-
-    document.getElementById('bidVal').textContent = state.bid.toFixed(d);
-    document.getElementById('askVal').textContent = state.ask.toFixed(d);
-    document.getElementById('hudPrice').textContent = state.bid.toFixed(d);
-    document.getElementById('hudSpread').textContent = `(Spread: ${state.spread} pts)`;
-
-    document.getElementById('buyScoreTxt').textContent = `${state.buyScore.toFixed(1)} / ${state.minScore}`;
-    document.getElementById('sellScoreTxt').textContent = `${state.sellScore.toFixed(1)} / ${state.minScore}`;
-    document.getElementById('buyBar').style.width = Math.min(100, state.buyScore) + '%';
-    document.getElementById('sellBar').style.width = Math.min(100, state.sellScore) + '%';
-    document.getElementById('minBuyLine').style.left = state.minScore + '%';
-    document.getElementById('minSellLine').style.left = state.minScore + '%';
-
-    document.getElementById('balVal').textContent = `$${state.balance.toFixed(2)}`;
-    document.getElementById('eqVal').textContent = `$${state.equity.toFixed(2)}`;
-    document.getElementById('accEqTop').textContent = `$${state.equity.toFixed(2)}`;
-
-    const fltEl = document.getElementById('fltVal');
-    fltEl.textContent = `${state.floating >= 0 ? '+' : ''}$${state.floating.toFixed(2)}`;
-    fltEl.className = state.floating >= 0 ? 'pnl-pos' : 'pnl-neg';
-
-    // Tabel Posisi Terbuka Asli MT5
-    const positions = state.positions || [];
-    document.getElementById('cntPos').textContent = positions.length;
-    const posBody = document.getElementById('posBody');
-    if (positions.length === 0) {
-      posBody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:16px;">Tidak ada posisi terbuka di MT5 saat ini.</td></tr>`;
-    } else {
-      posBody.innerHTML = positions.map(p => `
-        <tr>
-          <td>#${p.ticket}</td>
-          <td><b>${state.symbol}</b></td>
-          <td><span class="badge ${p.type === 'BUY' ? 'badge-live' : 'badge-off'}">${p.type}</span></td>
-          <td>${Number(p.lots).toFixed(2)}</td>
-          <td>${Number(p.open).toFixed(d)}</td>
-          <td style="color:#f87171">${p.sl > 0 ? Number(p.sl).toFixed(d) : '-'}</td>
-          <td style="color:#22ab94">${p.tp > 0 ? Number(p.tp).toFixed(d) : '-'}</td>
-          <td><small style="color:#a78bfa">${p.comment || '-'}</small></td>
-          <td class="${p.profit >= 0 ? 'pnl-pos' : 'pnl-neg'}">${p.profit >= 0 ? '+' : ''}$${Number(p.profit).toFixed(2)}</td>
-          <td><button class="act-sm" onclick="sendCommand('CLOSE_TICKET', '${p.ticket}')">Close ✖</button></td>
-        </tr>
-      `).join('');
-    }
-
-    // Tabel Pending Orders Asli MT5
-    const pending = state.pending || [];
-    document.getElementById('cntPend').textContent = pending.length;
-    const pendBody = document.getElementById('pendBody');
-    if (pending.length === 0) {
-      pendBody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px;">Tidak ada Pending Order aktif di MT5.</td></tr>`;
-    } else {
-      pendBody.innerHTML = pending.map(o => `
-        <tr>
-          <td>#${o.id}</td>
-          <td><b>${state.symbol}</b></td>
-          <td style="color:#fbbf24;font-weight:700">${o.type}</td>
-          <td>${Number(o.lots).toFixed(2)}</td>
-          <td><b>${Number(o.price).toFixed(d)}</b></td>
-          <td>${o.sl > 0 ? Number(o.sl).toFixed(d) : '-'}</td>
-          <td>${o.tp > 0 ? Number(o.tp).toFixed(d) : '-'}</td>
-          <td><small>${o.source || '-'}</small></td>
-          <td><button class="act-sm" onclick="sendCommand('CANCEL_PENDING', '${o.id}')">Batal ✖</button></td>
-        </tr>
-      `).join('');
-    }
-
-    drawChart();
-  }
-
-  function drawChart() {
-    const canvas = document.getElementById('mainChart');
-    if (!canvas.parentElement) return;
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
-    const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-
-    ctx.fillStyle = '#0b0e16';
-    ctx.fillRect(0, 0, W, H);
-
-    const candles = state.candles || [];
-    if (!isConnected || candles.length < 3) return;
-
-    const d = state.digits || 2;
-    const showRSI = document.getElementById('chkRSI').checked;
-    const mainH = showRSI ? Math.floor(H * 0.74) : H - 20;
-    const rsiTop = mainH + 10;
-    const rsiH = H - rsiTop - 16;
-
-    // Skala Harga MURNI Berdasarkan Candle Asli (Agar Grafik Tidak Pernah Gepeng!)
-    let minP = Infinity, maxP = -Infinity;
-    candles.forEach(c => {
-      if (c.low < minP) minP = c.low;
-      if (c.high > maxP) maxP = c.high;
-    });
-    const candleSpan = Math.max(maxP - minP, state.point * 20);
-
-    // Hanya masukkan garis posisi/SL/TP ke skala jika berada di dekat rentang candle (tidak merusak skala)
-    (state.positions || []).forEach(p => {
-      if (Math.abs(p.open - state.bid) < candleSpan * 1.5) {
-        minP = Math.min(minP, p.open); maxP = Math.max(maxP, p.open);
-      }
-      if (p.sl > 0 && Math.abs(p.sl - state.bid) < candleSpan * 1.5) {
-        minP = Math.min(minP, p.sl); maxP = Math.max(maxP, p.sl);
-      }
-      if (p.tp > 0 && Math.abs(p.tp - state.bid) < candleSpan * 1.5) {
-        minP = Math.min(minP, p.tp); maxP = Math.max(maxP, p.tp);
-      }
-    });
-
-    const pad = (maxP - minP) * 0.12 || 1;
-    minP -= pad; maxP += pad;
-
-    const yOf = p => mainH - 12 - ((p - minP) / (maxP - minP)) * (mainH - 28);
-    const plotW = W - 78;
-    const step = plotW / candles.length;
-    const xOf = idx => 10 + idx * step + step / 2;
-
-    // Grid Harga
-    ctx.strokeStyle = '#151b29';
-    ctx.fillStyle = '#64748b';
-    ctx.font = '10px monospace';
-    for (let i = 0; i <= 5; i++) {
-      let p = minP + (maxP - minP) * (i / 5);
-      let y = yOf(p);
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
-      ctx.fillText(p.toFixed(d), plotW + 5, y + 3);
-    }
-
-    // Zona Support & Resistance
-    if (document.getElementById('chkSR').checked) {
-      const sr = calcSupportResistance(candles);
-      const yRes = yOf(sr.res), ySup = yOf(sr.sup);
-      ctx.fillStyle = 'rgba(242, 54, 69, 0.12)'; ctx.fillRect(0, yRes - 4, plotW, 8);
-      ctx.fillStyle = 'rgba(8, 153, 129, 0.12)'; ctx.fillRect(0, ySup - 4, plotW, 8);
-    }
-
-    // Bollinger Bands
-    if (document.getElementById('chkBB').checked) {
-      const bb = calcBollinger(candles, 20, 2.0);
-      ctx.strokeStyle = 'rgba(168, 85, 247, 0.55)'; ctx.lineWidth = 1;
-      ['up', 'lo'].forEach(k => {
-        ctx.beginPath();
-        bb[k].forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
-        ctx.stroke();
-      });
-    }
-
-    // Candlestick
-    const cw = Math.max(3, step * 0.64);
-    candles.forEach((c, i) => {
-      const x = xOf(i);
-      const bull = c.close >= c.open;
-      ctx.strokeStyle = bull ? '#089981' : '#f23645';
-      ctx.fillStyle = bull ? '#089981' : '#f23645';
-      ctx.beginPath(); ctx.moveTo(x, yOf(c.high)); ctx.lineTo(x, yOf(c.low)); ctx.stroke();
-      const yO = yOf(c.open), yC = yOf(c.close);
-      ctx.fillRect(x - cw / 2, Math.min(yO, yC), cw, Math.max(2, Math.abs(yC - yO)));
-    });
-
-    // EMA Fast & Mid
-    if (document.getElementById('chkEMA').checked) {
-      const pFast = parseInt(document.getElementById('inpEmaFast').value) || 12;
-      const pMid = parseInt(document.getElementById('inpEmaMid').value) || 34;
-      const emaF = calcEMA(candles, pFast);
-      const emaM = calcEMA(candles, pMid);
-
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      emaF.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
-      ctx.stroke();
-
-      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      emaM.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yOf(v)); else ctx.lineTo(xOf(i), yOf(v)); });
-      ctx.stroke();
-    }
-
-    // Garis Harga Bid Saat Ini
-    const yBid = yOf(state.bid);
-    ctx.strokeStyle = '#2962ff'; ctx.setLineDash([4, 4]);
-    ctx.beginPath(); ctx.moveTo(0, yBid); ctx.lineTo(plotW, yBid); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#2962ff'; ctx.fillRect(plotW, yBid - 8, 76, 16);
-    ctx.fillStyle = '#fff'; ctx.fillText(state.bid.toFixed(d), plotW + 4, yBid + 3);
-
-    // Garis Posisi Terbuka & SL/TP Asli MT5
-    (state.positions || []).forEach(p => {
-      const yE = ClpY(yOf(p.open), 12, mainH - 6);
-      ctx.strokeStyle = p.type === 'BUY' ? '#22ab94' : '#f87171';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(0, yE); ctx.lineTo(plotW, yE); ctx.stroke();
-      ctx.fillStyle = ctx.strokeStyle;
-      ctx.fillText(`#${p.ticket} ${p.type} ${p.lots} @ ${Number(p.open).toFixed(d)} (${p.profit >= 0 ? '+' : ''}$${Number(p.profit).toFixed(2)})`, 14, yE - 4);
-
-      if (p.sl > 0) {
-        const yS = ClpY(yOf(p.sl), 12, mainH - 6);
-        ctx.strokeStyle = '#ef4444'; ctx.setLineDash([3, 3]);
-        ctx.beginPath(); ctx.moveTo(0, yS); ctx.lineTo(plotW, yS); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = '#ef4444'; ctx.fillText(`SL #${p.ticket}: ${Number(p.sl).toFixed(d)}`, plotW - 145, yS - 3);
-      }
-      if (p.tp > 0) {
-        const yT = ClpY(yOf(p.tp), 12, mainH - 6);
-        ctx.strokeStyle = '#10b981'; ctx.setLineDash([3, 3]);
-        ctx.beginPath(); ctx.moveTo(0, yT); ctx.lineTo(plotW, yT); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = '#10b981'; ctx.fillText(`TP #${p.ticket}: ${Number(p.tp).toFixed(d)}`, plotW - 145, yT - 3);
-      }
-    });
-
-    // Garis Pending Order Asli MT5
-    (state.pending || []).forEach(o => {
-      const yP = ClpY(yOf(o.price), 12, mainH - 6);
-      ctx.strokeStyle = '#fbbf24'; ctx.setLineDash([5, 3]);
-      ctx.beginPath(); ctx.moveTo(0, yP); ctx.lineTo(plotW, yP); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillText(`⏳ #${o.id} ${o.type} ${o.lots} @ ${Number(o.price).toFixed(d)}`, 14, yP - 4);
-    });
-
-    // Sub-Chart RSI(14)
-    if (showRSI) {
-      ctx.strokeStyle = '#262d40';
-      ctx.beginPath(); ctx.moveTo(0, mainH + 4); ctx.lineTo(W, mainH + 4); ctx.stroke();
-      const yRsi = val => rsiTop + rsiH - (val / 100) * rsiH;
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)'; ctx.setLineDash([2, 2]);
-      [70, 50, 30].forEach(lvl => {
-        let y = yRsi(lvl);
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
-        ctx.fillStyle = '#64748b'; ctx.fillText(lvl, plotW + 5, y + 3);
-      });
-      ctx.setLineDash([]);
-
-      const rsiArr = calcRSI(candles, 14);
-      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      rsiArr.forEach((v, i) => { if (i === 0) ctx.moveTo(xOf(i), yRsi(v)); else ctx.lineTo(xOf(i), yRsi(v)); });
-      ctx.stroke();
-      ctx.fillStyle = '#c084fc';
-      ctx.fillText(`RSI(14): ${rsiArr[rsiArr.length - 1].toFixed(1)}`, 12, rsiTop + 12);
-    }
-  }
-
-  function ClpY(y, lo, hi) { return Math.max(lo, Math.min(hi, y)); }
-
-  // === POLLING MURNI KE LOCAL SERVER MT5 ===
-  async function checkNow() {
+  // Load File (Image/Audio) dari DB Lokal
+  function loadFileLocal(dbKey, fallbackSrc, callback) {
     try {
-      const res = await fetch(serverUrl + '/state');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.connected && data.bid > 0 && data.candles && data.candles.length > 0) {
-          if (!isConnected) {
-            isConnected = true;
-            document.getElementById('disconnOverlay').style.display = 'none';
-            document.getElementById('chartHud').style.display = 'block';
-            const badge = document.getElementById('connBadge');
-            badge.textContent = 'LIVE: TERSAMBUNG REAL KE MT5';
-            badge.className = 'badge badge-live';
-            addLog(`Tersambung real-time ke MetaTrader 5 (${data.symbol} @ ${data.bid})!`, '#22ab94');
-          }
-          state = Object.assign(state, data);
-          evaluateRealMarketAndAI();
-          renderAll();
-          return;
-        }
-      }
-    } catch (e) {}
-
-    // Jika belum terhubung, tampilkan overlay (JANGAN TAMPILKAN MARKET PALSU)
-    isConnected = false;
-    document.getElementById('disconnOverlay').style.display = 'flex';
-    document.getElementById('chartHud').style.display = 'none';
-    const badge = document.getElementById('connBadge');
-    badge.textContent = 'MENUNGGU DATA MT5...';
-    badge.className = 'badge badge-off';
+        const dbReq = indexedDB.open("wbphotos", 1);
+        dbReq.onsuccess = (e) => {
+          try {
+            const tx = e.target.result.transaction("p", "readonly");
+            const req = tx.objectStore("p").get(dbKey);
+            req.onsuccess = (ev) => {
+              if (ev.target.result && ev.target.result.blob) {
+                callback(URL.createObjectURL(ev.target.result.blob));
+              } else { callback(fallbackSrc); }
+            };
+          } catch(err) { callback(fallbackSrc); }
+        };
+        dbReq.onerror = () => { callback(fallbackSrc); };
+    } catch(err) { callback(fallbackSrc); }
   }
 
-  setInterval(checkNow, 500);
-  window.addEventListener('resize', drawChart);
+  renderData();
+
+  // Load Foto
+  loadFileLocal("f1", cfg.f1, (src) => { if($("foto1")) { $("foto1").src = src; $("foto1").onload = () => $("foto1").classList.add("loaded"); } });
+  loadFileLocal("f2", cfg.f2, (src) => { if($("foto2")) { $("foto2").src = src; $("foto2").onload = () => $("foto2").classList.add("loaded"); } });
+
+  function arm(id){
+    var s = $(id); if(!s) return;
+    var els = s.querySelectorAll(".r,.rs,.diag-item,.cd-wrap,.cal-wrap,.map-wrap,.s3-bottom,.inv-item,.btn");
+    s.classList.remove("settled");
+    for(var i=0; i<els.length; i++) { els[i].classList.remove("in"); }
+    void s.offsetWidth;
+    for(var i=0; i<els.length; i++) { els[i].classList.add("in"); }
+  }
+
+  function go(to, from, btn){
+    if(st.busy || st.slide === to) return; st.busy = true;
+    var r = btn.getBoundingClientRect();
+    root.style.setProperty("--x", (r.left + r.width / 2) + "px");
+    root.style.setProperty("--y", (r.top + r.height / 2) + "px");
+    var ring = $("ring"); ring.classList.remove("go"); void ring.offsetWidth; ring.classList.add("go");
+    var A = $(to), B = $(from); A.scrollTop = 0; arm(to);
+    A.classList.add("active", "iris"); B.classList.add("leaving");
+    setTimeout(function(){
+      A.classList.remove("iris"); B.classList.remove("active", "leaving");
+      ring.classList.remove("go"); st.slide = to; st.busy = false;
+    }, 800);
+  }
+
+  function openLetter() {
+    if(st.busy) return; st.busy = true; burstMagic();
+    var c = $("cover"); c.classList.add("opening"); $("env").classList.add("open");
+    setTimeout(() => { c.classList.add("zoom"); }, 900);
+    setTimeout(() => { arm("s1"); $("s1").classList.add("active"); c.classList.remove("active"); st.slide = "s1"; st.busy = false; }, 1500);
+  }
+
+  if($("btnOpen")) { $("btnOpen").addEventListener("click", openLetter); }
+  if($("env")) { $("env").addEventListener("click", openLetter); }
+  if($("btnPhoto")) $("btnPhoto").addEventListener("click", function(e){ go("s2", "s1", e.currentTarget); });
+  if($("btnBackToS1_fromS2")) $("btnBackToS1_fromS2").addEventListener("click", function(e){ go("s1", "s2", e.currentTarget); });
+  if($("btnGoToMengundang")) $("btnGoToMengundang").addEventListener("click", function(e){ go("s3", "s2", e.currentTarget); });
+  if($("btnBackToS2_fromS3")) $("btnBackToS2_fromS3").addEventListener("click", function(e){ go("s2", "s3", e.currentTarget); });
+  if($("btnGoToAcara")) $("btnGoToAcara").addEventListener("click", function(e){ go("s4", "s3", e.currentTarget); });
+  if($("btnBackToS3_fromS4")) $("btnBackToS3_fromS4").addEventListener("click", function(e){ go("s3", "s4", e.currentTarget); });
+  if($("btnMaps")) $("btnMaps").addEventListener("click", function(e){ e.preventDefault(); window.open(cfg.map, "_blank"); });
+
+  // PENGATURAN MUSIK
+  var audio = new Audio(); 
+  audio.loop = true; 
+  audio.preload = "auto";
+  
+  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; });
+
+  function ui(on) {
+    st.music = on; var b = $("btnMusic");
+    if(b) { if(on) b.classList.add("on"); else b.classList.remove("on"); }
+    if($("icPlay")) $("icPlay").style.display = on ? "none" : "";
+    if($("icPause")) $("icPause").style.display = on ? "" : "none";
+  }
+  function playMusic() { try { var p = audio.play(); if(p && p.then) { p.then(() => ui(true)).catch(() => ui(false)); } } catch(e) { ui(false); } }
+  if($("btnMusic")) $("btnMusic").addEventListener("click", function(){ if(st.music) { audio.pause(); ui(false); } else { playMusic(); } });
+
+  setInterval(function() {
+    if(!cfg.targetDate) return;
+    var d = new Date(cfg.targetDate).getTime() - new Date().getTime();
+    if(d < 0) return;
+    if($("cd-d")) $("cd-d").innerText = Math.floor(d / 86400000).toString().padStart(2, '0');
+    if($("cd-h")) $("cd-h").innerText = Math.floor((d % 86400000) / 3600000).toString().padStart(2, '0');
+    if($("cd-m")) $("cd-m").innerText = Math.floor((d % 3600000) / 60000).toString().padStart(2, '0');
+    if($("cd-s")) $("cd-s").innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
+  }, 1000);
+
+})();
 </script>
 </body>
 </html>
