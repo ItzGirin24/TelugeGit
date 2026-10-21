@@ -52,28 +52,25 @@
 </head>
 <body class="flex flex-col lg:flex-row h-screen w-full">
 
-  <!-- SIDEBAR (Kiri) -->
+  <!-- SIDEBAR -->
   <aside class="w-full lg:w-72 bg-[#283b2d] text-white flex flex-col shadow-2xl z-20 flex-shrink-0 lg:h-full h-auto">
     <div class="p-8 pb-4 text-center hidden lg:block">
       <div class="inline-flex w-20 h-20 bg-gradient-to-br from-[#e6cc8c] to-[#b08d45] rounded-full items-center justify-center text-4xl shadow-lg mb-2 text-[#283b2d]">
         <i class="fa-solid fa-rings-wedding"></i>
       </div>
-      <!-- Teks Di bawah Logo Sidebar -->
       <h1 class="font-bold text-lg leading-tight mt-4">Admin Panel</h1>
     </div>
     
-    <!-- Header Mobile version -->
     <div class="p-4 flex justify-between items-center lg:hidden border-b border-[#3a5240]">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 bg-gradient-to-br from-[#e6cc8c] to-[#b08d45] rounded-full flex items-center justify-center text-xl text-[#283b2d] shadow-lg">
           <i class="fa-solid fa-rings-wedding"></i>
         </div>
-        <h1 class="font-bold text-lg leading-tight">Admin Panel</h1>
+        <h1 class="font-bold text-lg leading-tight">Admin</h1>
       </div>
       <button id="btnSaveMobile" class="bg-gradient-to-r from-[#b08d45] to-[#e6cc8c] text-[#1e2d22] px-4 py-2 rounded-xl font-bold shadow-lg border-none text-sm uppercase cursor-pointer">Simpan</button>
     </div>
 
-    <!-- Navigasi Tabs Sidebar -->
     <nav class="flex lg:flex-col overflow-x-auto lg:overflow-y-auto px-4 py-4 lg:py-6 space-x-2 lg:space-x-0 lg:space-y-3 flex-1 hide-scrollbar">
       <button class="tab-btn active shrink-0 lg:w-full text-left px-5 py-3.5 rounded-xl flex items-center gap-3 font-semibold text-sm" data-target="tab-umum">
         <i class="fa-solid fa-heart w-5 text-center text-lg"></i> Data Mempelai
@@ -92,7 +89,6 @@
       </button>
     </nav>
 
-    <!-- Tombol Simpan Desktop Sidebar -->
     <div class="p-5 bg-[#1e2d22] hidden lg:block border-t border-[#3a5240]">
       <button id="btnSaveMain" class="w-full border-none bg-gradient-to-r from-[#b08d45] to-[#e6cc8c] text-[#1e2d22] py-4 rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 text-sm uppercase tracking-wide cursor-pointer">
         <i class="fa-solid fa-floppy-disk text-lg"></i> Simpan Preview
@@ -100,14 +96,13 @@
     </div>
   </aside>
 
-  <!-- MAIN AREA (Tengah - Form Edit) -->
+  <!-- MAIN AREA -->
   <main class="flex-1 overflow-y-auto p-4 lg:p-12 relative bg-[#fbf6e9]">
     <div class="max-w-4xl mx-auto flex flex-col xl:flex-row gap-8">
       
-      <!-- Area Pengisian Form -->
       <div class="flex-1">
         
-        <!-- TAB 1: DATA MEMPELAI -->
+        <!-- TAB 1 -->
         <div id="tab-umum" class="tab-content active glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-6 border-b pb-4"><i class="fa-solid fa-ring text-[#b08d45] mr-2"></i> Identitas Mempelai</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,7 +133,7 @@
           </div>
         </div>
 
-        <!-- TAB 2: KONTEN & TEKS -->
+        <!-- TAB 2 -->
         <div id="tab-teks" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-6 border-b pb-4"><i class="fa-solid fa-feather text-[#b08d45] mr-2"></i> Teks Surat Undangan</h2>
           <div class="space-y-5">
@@ -156,7 +151,7 @@
             </div>
             <div>
               <label>Paragraf Isi / Detail Undangan</label>
-              <textarea id="i_txtIsi" rows="4" class="input-field resize-none">(Telah melangsungkan akad nikah pada tanggal 16 Oktober 2026). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal</textarea>
+              <textarea id="i_txtIsi" rows="4" class="input-field resize-none">(Telah melangsungkan akad nikah). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal</textarea>
             </div>
             <div>
               <label>Paragraf Penutup</label>
@@ -169,10 +164,14 @@
           </div>
         </div>
 
-        <!-- TAB 3: ACARA & LOKASI -->
+        <!-- TAB 3 -->
         <div id="tab-acara" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-6 border-b pb-4"><i class="fa-solid fa-map-location-dot text-[#b08d45] mr-2"></i> Waktu & Lokasi Acara</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label>Teks Tanggal Akad (Opsional, kosongkan jika tidak dipakai)</label>
+              <input type="text" id="i_tAkad" class="input-field" value="16 Oktober 2026">
+            </div>
             <div class="md:col-span-2">
               <label>Teks Tanggal Resepsi (Di Dalam Surat)</label>
               <input type="text" id="i_tResepsi" class="input-field" value="27 Oktober 2026">
@@ -213,7 +212,7 @@
           </div>
         </div>
 
-        <!-- TAB 4: DAFTAR TAMU -->
+        <!-- TAB 4 -->
         <div id="tab-tamu" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-2 border-b pb-4"><i class="fa-solid fa-list-check text-[#b08d45] mr-2"></i> Turut Mengundang</h2>
           <p class="text-sm text-gray-500 mb-6">Kelola daftar pihak/keluarga yang turut mengundang.</p>
@@ -229,11 +228,11 @@
           </div>
         </div>
 
-        <!-- TAB 5: FOTO & MEDIA -->
+        <!-- TAB 5 -->
         <div id="tab-foto" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-4 border-b pb-4"><i class="fa-solid fa-camera text-[#b08d45] mr-2"></i> Galeri & Musik</h2>
           <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-md border border-blue-200 mb-6 font-medium">
-            <i class="fa-solid fa-info-circle mr-1"></i> Data dan Gambar akan langsung diperbarui ke Tampilan Preview melalui memori lokal browser.
+            <i class="fa-solid fa-info-circle mr-1"></i> Data dan Media yang disimpan akan langsung dihubungkan ke file <strong>index.html</strong> melalui database browser.
           </div>
           
           <div class="mb-6">
@@ -252,7 +251,7 @@
                 <img id="preview_f1" class="absolute inset-0 w-full h-full object-cover rounded-[0.9rem] opacity-0 transition-opacity" style="z-index: 10;">
               </div>
               <label class="mt-4">Label Teks Foto 1 (Gunakan &lt;br&gt; untuk enter)</label>
-              <input type="text" id="i_lblFoto1" class="input-field mt-1" value="Orang Tua<br>Mempelai Pria">
+              <input type="text" id="i_lblFoto1" class="input-field mt-1" value="Orang Tua<br>Mempelai">
             </div>
 
             <div>
@@ -271,7 +270,6 @@
 
           <div class="border-t border-gray-200 pt-6">
             <h3 class="font-bold text-gray-800 mb-3"><i class="fa-solid fa-music text-[#b08d45] mr-2"></i> Upload File Musik Latar</h3>
-            <p class="text-xs text-gray-500 mb-3">Upload file berformat .mp3 agar lagu langsung tersimpan di dalam sistem untuk pengalaman tanpa loading patah-patah.</p>
             <div class="flex items-center gap-3">
               <input type="file" id="f_musik" accept="audio/mp3, audio/mpeg" class="input-field bg-white cursor-pointer" style="padding: 0.5rem 1rem;">
             </div>
@@ -281,14 +279,13 @@
       </div>
     </div>
     
-    <!-- Right Column: Live Preview Phone -->
+    <!-- PREVIEW -->
     <aside class="hidden xl:flex w-[350px] flex-col items-center flex-shrink-0 z-10 sticky top-8 h-[calc(100vh-4rem)]">
       <div class="w-full flex justify-between items-center mb-4 px-2">
         <h3 class="font-bold text-[#283b2d] text-lg"><i class="fa-solid fa-mobile-screen mr-2 text-[#b08d45]"></i>Tampilan</h3>
         <button id="btnRefreshPreview" class="text-sm px-3 py-1.5 bg-white border border-gray-200 shadow-sm rounded-lg text-gray-600 hover:text-[#283b2d] hover:border-[#b08d45] transition-all cursor-pointer"><i class="fa-solid fa-rotate-right mr-1"></i> Refresh</button>
       </div>
       <div class="phone-frame w-full shadow-2xl">
-        <!-- PASTIKAN BUKA DENGAN LIVE SERVER (HTTP) BUKAN FILE:/// AGAR BISA MEMBACA INDEX -->
         <iframe id="previewFrame" src="index.html"></iframe>
       </div>
     </aside>
@@ -301,9 +298,6 @@
   </div>
 
 <script>
-/* =========================================================================
-   1. SETUP DATABASE LOKAL (IndexedDB)
-========================================================================= */
 const dbReq = indexedDB.open("wbphotos", 1);
 let localDb;
 dbReq.onupgradeneeded = (e) => { e.target.result.createObjectStore("p", { keyPath: "id" }); };
@@ -312,21 +306,13 @@ dbReq.onsuccess = (e) => { localDb = e.target.result; };
 const $ = id => document.getElementById(id);
 let guests = [
   { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" },
-  { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
-  { nama: "Bos Wawan Hermawan", desc: "C.E.O PT Senang Jaya Abadi" },
-  { nama: "Pa Philipp", desc: "C.E.O PT Hasema Philipp" },
-  { nama: "Keluarga Besar Bpk. Sutrisno", desc: "Riau" },
-  { nama: "Keluarga Bp. Sumar (Alm)", desc: "Tangerang" }
+  { nama: "Keluarga Bp. Samaan", desc: "Tangerang" }
 ];
 
-/* =========================================================================
-   2. UI LOGIC (Tabs & Preview Gambar)
-========================================================================= */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    
     btn.classList.add('active');
     $(btn.dataset.target).classList.add('active');
   });
@@ -335,10 +321,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 window.previewImage = function(input, imgId) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
-    reader.onload = function(e) {
-      $(imgId).src = e.target.result;
-      $(imgId).style.opacity = "1";
-    }
+    reader.onload = function(e) { $(imgId).src = e.target.result; $(imgId).style.opacity = "1"; }
     reader.readAsDataURL(input.files[0]);
   }
 }
@@ -348,9 +331,6 @@ function showLoading(show, text="Memproses...") {
   $("loadingModal").style.display = show ? "flex" : "none";
 }
 
-/* =========================================================================
-   3. RENDER DATA DAFTAR TAMU
-========================================================================= */
 function renderGuestList() {
   const container = $("guestListContainer");
   container.innerHTML = "";
@@ -358,15 +338,11 @@ function renderGuestList() {
     container.innerHTML = "<p class='text-center text-sm text-gray-400 py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300'>Belum ada daftar tamu.</p>";
     return;
   }
-
   guests.forEach((g, idx) => {
     const div = document.createElement("div");
     div.className = "guest-item group transition-all hover:border-[#b08d45]";
     div.innerHTML = `
-      <div>
-        <p class="font-bold text-sm text-[#283b2d]">${g.nama}</p>
-        <p class="text-xs text-[#b08d45] uppercase tracking-wider font-semibold mt-1">${g.desc}</p>
-      </div>
+      <div><p class="font-bold text-sm text-[#283b2d]">${g.nama}</p><p class="text-xs text-[#b08d45] uppercase tracking-wider font-semibold mt-1">${g.desc}</p></div>
       <button onclick="removeGuest(${idx})" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Hapus Tamu"><i class="fa-solid fa-trash-can"></i></button>
     `;
     container.appendChild(div);
@@ -374,23 +350,14 @@ function renderGuestList() {
 }
 
 $("btnAddGuest").addEventListener("click", () => {
-  const n = $("newGuestName").value.trim();
-  const d = $("newGuestDesc").value.trim();
+  const n = $("newGuestName").value.trim(); const d = $("newGuestDesc").value.trim();
   if(!n) return alert("Silakan masukkan nama tamu terlebih dahulu!");
   guests.push({ nama: n, desc: d });
-  $("newGuestName").value = "";
-  $("newGuestDesc").value = "";
-  renderGuestList();
+  $("newGuestName").value = ""; $("newGuestDesc").value = ""; renderGuestList();
 });
 
-window.removeGuest = function(idx) {
-  guests.splice(idx, 1);
-  renderGuestList();
-}
+window.removeGuest = function(idx) { guests.splice(idx, 1); renderGuestList(); }
 
-/* =========================================================================
-   4. LOAD DATA (Dari LocalStorage Saat Halaman Dibuka)
-========================================================================= */
 function loadData() {
   let cfg = null;
   try { cfg = JSON.parse(localStorage.getItem("wed_cfg")); } catch(e) {}
@@ -409,7 +376,8 @@ function loadData() {
     $("i_txtIsi").value = cfg.txtIsi || "";
     $("i_txtPenutup").value = cfg.txtPenutup || "";
     $("i_txtSalamAkhir").value = cfg.txtSalamAkhir || "";
-
+    
+    if(cfg.tAkad !== undefined) $("i_tAkad").value = cfg.tAkad;
     $("i_tResepsi").value = cfg.tResepsi || ""; 
     $("i_cdTitle1").value = cfg.cdTitle1 || ""; 
     $("i_cdTitle2").value = cfg.cdTitle2 || ""; 
@@ -423,16 +391,11 @@ function loadData() {
     $("i_lblFoto1").value = cfg.lblFoto1 || "";
     $("i_lblFoto2").value = cfg.lblFoto2 || "";
 
-    if(cfg.mengundang && Array.isArray(cfg.mengundang)) {
-      guests = cfg.mengundang;
-    }
+    if(cfg.mengundang && Array.isArray(cfg.mengundang)) guests = cfg.mengundang;
   }
   renderGuestList();
 }
 
-/* =========================================================================
-   5. SIMPAN DATA (Menulis ke LocalStorage & IndexedDB)
-========================================================================= */
 function saveFileLocal(id, file) {
   return new Promise(resolve => {
     if(!file) return resolve();
@@ -454,48 +417,22 @@ async function doSave() {
   showLoading(true, "Menyimpan Data...");
   
   const newCfg = {
-    title: $("i_title").value,
-    kicker: $("i_kicker").value,
-    nPria: $("i_nPria").value, 
-    nWanita: $("i_nWanita").value, 
-    nPendek: $("i_nPendek").value,
-    inisial: $("i_inisial").value,
-    
-    txtSalam: $("i_txtSalam").value,
-    txtPembuka: $("i_txtPembuka").value,
-    txtTengah: $("i_txtTengah").value,
-    txtIsi: $("i_txtIsi").value,
-    txtPenutup: $("i_txtPenutup").value,
-    txtSalamAkhir: $("i_txtSalamAkhir").value,
-    
-    tResepsi: $("i_tResepsi").value, 
-    cdTitle1: $("i_cdTitle1").value,
-    cdTitle2: $("i_cdTitle2").value,
-    targetDate: $("i_targetDate").value,
-    calBulan: $("i_calBulan").value,
-    calTanggal: $("i_calTanggal").value,
-    gdg: $("i_gdg").value, 
-    map: $("i_map").value,
-    
-    galKicker: $("i_galKicker").value,
-    lblFoto1: $("i_lblFoto1").value,
-    lblFoto2: $("i_lblFoto2").value,
-    mengundang: guests,
-    
-    f1: "pama.jpeg", 
-    f2: "mempelai.jpeg",
-    musik: "LAGU.mp3"
+    title: $("i_title").value, kicker: $("i_kicker").value,
+    nPria: $("i_nPria").value, nWanita: $("i_nWanita").value, 
+    nPendek: $("i_nPendek").value, inisial: $("i_inisial").value,
+    txtSalam: $("i_txtSalam").value, txtPembuka: $("i_txtPembuka").value, txtTengah: $("i_txtTengah").value,
+    txtIsi: $("i_txtIsi").value, txtPenutup: $("i_txtPenutup").value, txtSalamAkhir: $("i_txtSalamAkhir").value,
+    tAkad: $("i_tAkad").value, tResepsi: $("i_tResepsi").value, 
+    cdTitle1: $("i_cdTitle1").value, cdTitle2: $("i_cdTitle2").value, targetDate: $("i_targetDate").value,
+    calBulan: $("i_calBulan").value, calTanggal: $("i_calTanggal").value,
+    gdg: $("i_gdg").value, map: $("i_map").value,
+    galKicker: $("i_galKicker").value, lblFoto1: $("i_lblFoto1").value, lblFoto2: $("i_lblFoto2").value,
+    mengundang: guests, f1: "pama.jpeg", f2: "mempelai.jpeg", musik: "LAGU.mp3"
   };
 
-  try {
-    localStorage.setItem("wed_cfg", JSON.stringify(newCfg));
-  } catch(e) { console.error("Gagal simpan ke localStorage", e); }
+  try { localStorage.setItem("wed_cfg", JSON.stringify(newCfg)); } catch(e) {}
   
-  // Simpan foto dan file MP3 ke memory
-  const file1 = $("f_foto1").files[0];
-  const file2 = $("f_foto2").files[0];
-  const fileMusik = $("f_musik").files[0];
-
+  const file1 = $("f_foto1").files[0]; const file2 = $("f_foto2").files[0]; const fileMusik = $("f_musik").files[0];
   if(file1) await saveFileLocal("f1", file1);
   if(file2) await saveFileLocal("f2", file2);
   if(fileMusik) await saveFileLocal("musik", fileMusik);
@@ -503,22 +440,15 @@ async function doSave() {
   $("previewFrame").src = "index.html?t=" + Date.now();
   showLoading(false);
   
-  const btn = $("btnSaveMain");
-  const btnM = $("btnSaveMobile");
-  if(btn) {
+  [document.getElementById("btnSaveMain"), document.getElementById("btnSaveMobile")].forEach(btn => {
+    if(btn) {
       const oldText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check text-lg"></i> Disimpan!';
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Disimpan!';
       btn.style.background = "linear-gradient(to right, #4ade80, #22c55e)";
       btn.style.color = "white";
       setTimeout(() => { btn.innerHTML = oldText; btn.style.background = ""; btn.style.color = ""; }, 2000);
-  }
-  if(btnM) {
-      const oldTextM = btnM.innerHTML;
-      btnM.innerHTML = 'Disimpan!';
-      btnM.style.background = "linear-gradient(to right, #4ade80, #22c55e)";
-      btnM.style.color = "white";
-      setTimeout(() => { btnM.innerHTML = oldTextM; btnM.style.background = ""; btnM.style.color = ""; }, 2000);
-  }
+    }
+  });
 }
 
 if($("btnSaveMain")) $("btnSaveMain").addEventListener("click", doSave);
