@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Great+Vibes&family=Lora:wght@400;500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* CSS SAMA SEPERTI SEBELUMNYA */
 :root{--ivory:#fbf6e9;--cream:#f1e7d2;--paper:#fffdf7;--sage:#8ba58a;--forest:#283b2d;--gold:#b08d45;--gold2:#e6cc8c;--ink:#2a2a2a;--ink2:#4a4a4a;
 --head:"Cormorant Garamond",Georgia,serif;--body:"Lora",Georgia,serif;--sans:"Montserrat",Arial,sans-serif;--script:"Great Vibes",cursive;
 --ease:cubic-bezier(.2,.8,.2,1); --bounce:cubic-bezier(0.34, 1.56, 0.64, 1); --vh:100vh}
@@ -17,20 +18,15 @@
 html,body{height:100%;overflow:hidden;background:var(--ivory); touch-action: none;}
 body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
 .paused *{animation-play-state:paused!important}
-
 img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-events: none; }
-
 .bg-texture {position:fixed; inset:-50%; z-index:0; opacity:0.15; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c16.569 0 30 13.431 30 30S46.569 60 30 60 0 46.569 0 30 13.431 0 30 0zm0 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 10c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23b08d45' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E"); animation: spinBg 180s linear infinite;}
 @keyframes spinBg { 100% {transform: rotate(360deg);} }
-
 .glow{position:fixed;width:80vmax;height:80vmax;left:50%;top:-30vmax;margin-left:-40vmax;pointer-events:none;background:radial-gradient(circle,rgba(230,204,140,.4),transparent 60%);animation:glow 6s ease-in-out infinite alternate; z-index:0;}
 @keyframes glow{to{opacity:.6;scale:1.15}}
-
 .sparkles {position:fixed; inset:0; pointer-events:none; z-index:1;}
 .sparkle {position:absolute; width:6px; height:6px; background:var(--gold2); border-radius:50% 0 50% 50%; box-shadow:0 0 8px 2px rgba(230,204,140,0.5); animation: fall linear infinite, swayPetal ease-in-out infinite alternate;}
 @keyframes fall {from {transform: translateY(-10vh) rotate(0deg);} to {transform: translateY(110vh) rotate(360deg);}}
 @keyframes swayPetal {0% {margin-left: -15px;} 100% {margin-left: 15px;}}
-
 .bf-container {position: absolute; inset: 0; pointer-events: none; z-index: 15; overflow: hidden; display: none;}
 .slide.active .bf-container {display: block;}
 .bf {position: absolute; animation: fly 8s linear infinite; opacity: 0;}
@@ -41,53 +37,44 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 .bf:nth-child(2) svg { animation-duration: 0.3s; width: 35px; height: 35px; fill: var(--gold2); }
 .bf:nth-child(3) { animation-duration: 9s; animation-delay: 4.5s; }
 .bf:nth-child(3) svg { animation-duration: 0.5s; width: 55px; height: 55px; fill: var(--gold); }
-
 .slide{position:fixed;inset:0;z-index:2;overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s linear .6s}
 .slide.active{opacity:1;visibility:visible;transition-delay:0s}
 .slide.leaving{opacity:0;transform:scale(.95) translateY(-2vh);transition:opacity .5s ease,transform .8s var(--ease)}
 .slide.iris{z-index:4;visibility:visible;opacity:1;transition:none;animation:iris 1.2s cubic-bezier(.65,0,.25,1) both}
 @keyframes iris{from{clip-path:circle(0 at var(--x) var(--y))}to{clip-path:circle(150vmax at var(--x) var(--y))}}
 .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom); position: relative; max-width: 500px; margin: 0 auto;}
-
 .r{opacity:0; transform:translateY(25px) scale(0.95) rotateX(10deg); transition: opacity 0.6s var(--ease), transform 0.6s var(--bounce);}
 .r.in{opacity:1; transform:none; transition-delay: var(--d, 0s);}
 .rs i{display:inline-block;opacity:0}
 .rs.in i{animation:let 0.7s var(--bounce) both;animation-delay:calc(var(--d,0s) + var(--i)*25ms)}
 @keyframes let{from{opacity:0;transform:translateY(.3em) scale(.8)}to{opacity:1;transform:none}}
-
 .floating { animation: floatAnim 4s ease-in-out infinite; }
 .floating-del { animation: floatAnim 4s ease-in-out infinite 2s; }
 @keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
 .btn{position:relative;overflow:hidden;font-family:var(--sans);font-size:clamp(0.65rem, 1.5vh, 0.75rem);font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--forest);background:linear-gradient(180deg,#fffaf0,#f0e2bf);border:1px solid var(--gold);padding:1.5vh 3vh;border-radius:40px;cursor:pointer;box-shadow:0 8px 20px rgba(120,90,40,.2);transition:transform .3s var(--ease), box-shadow .3s; pointer-events:auto;}
 .btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.8) 50%,transparent 65%);transform:translateX(-120%);animation:shine 3s 2s infinite}
 @keyframes shine{0%,70%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 .btn:active{transform:scale(.94)}.btn.ghost{background:transparent;box-shadow:none;border-color:transparent;}
 #btnOpen { animation: pulseGlow 2s infinite; }
 @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(176,141,69,0.6); } 70% { box-shadow: 0 0 0 15px rgba(176,141,69,0); } 100% { box-shadow: 0 0 0 0 rgba(176,141,69,0); } }
-
 #ring{position:fixed;left:var(--x);top:var(--y);width:300vmax;height:300vmax;translate:-50% -50%;z-index:6;pointer-events:none;opacity:0;fill:none;stroke:var(--gold);stroke-width:2}
 #ring.go{animation:ring 1s cubic-bezier(.65,0,.25,1)}
 @keyframes ring{from{opacity:.9;scale:0}to{opacity:0;scale:1}}
-
 .kicker{font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink2);text-align:center}
 .cname{font-family:var(--head);font-weight:600;font-size:clamp(2.4rem,9vw,3.2rem);line-height:1;color:var(--forest);text-align:center;margin:.6rem 0 .8rem; animation: floatText 5s ease-in-out infinite;}
 .cname small{display:block;font-family:var(--script);font-size:1.4em;color:var(--gold);line-height:0.7; margin: 0.3rem 0;}
 @keyframes floatText { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-5px);} }
 .fi{opacity:0;animation:fi 1s both}@keyframes fi{to{opacity:1}}
 #cover.opening .fi{opacity:0;animation:none;transition:opacity .3s}
-
 .env{position:relative;width:min(80vw,320px);aspect-ratio:3/2;margin:2vh 0 3vh;perspective:1000px;opacity:0; cursor: pointer; pointer-events:auto;animation:envin 1.2s .3s var(--bounce) forwards;transition:transform 1s var(--ease), opacity .5s .4s}
 @keyframes envin{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:none}}
 #cover.zoom .env{transform:translateY(25vh) scale(4);opacity:0}
-
 .eb{position:absolute;inset:0;background:linear-gradient(160deg,#efe3c6,#e2d1a8);border-radius:6px;box-shadow:0 15px 30px rgba(80,60,30,.25);transition:box-shadow 1s}
 .open .eb{box-shadow:0 8px 16px rgba(80,60,30,.2),0 0 0 1px rgba(176,141,69,.55)}
 .lt{position:absolute;left:5%;right:5%;top:5%;bottom:8%;background:var(--paper);z-index:2;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, box-shadow 0.8s 0.5s} 
 .open .lt{transform:translateY(-80%);box-shadow:0 15px 25px rgba(80,60,30,.2)}
 .lt b{font-family:var(--script);font-weight:400;font-size:clamp(2.5rem, 8vw, 3rem);color:var(--forest);text-align:center;padding:0 10px; display: flex; align-items: center; gap: 8px;}
 .lt b span{font-size: 0.6em; color: var(--gold);}
-
 .pk{position:absolute;inset:0;z-index:3;border-radius:6px;background:linear-gradient(170deg,#f6ecd2,#e8d9b3);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%)}
 .fp{position:absolute;left:0;right:0;top:0;height:58%;z-index:4;transform-origin:top center;background:linear-gradient(180deg,#f8efd8,#e6d6b0);clip-path:polygon(0 0,100% 0,50% 100%);transition:transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, z-index 0s linear 0.4s} 
 .open .fp{transform:rotateX(180deg);z-index:1}
@@ -96,41 +83,33 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 .open .seal{opacity:0; transform:scale(1.5);}
 .magic-dust {position:absolute; width:8px; height:8px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:10; opacity:0; box-shadow:0 0 6px var(--gold2);}
 @keyframes burst { 0% {transform:translate(0,0) scale(1); opacity:1;} 100% {transform:translate(var(--tx), var(--ty)) scale(0); opacity:0;} }
-
 .paper-wrap { width: 100%; max-height: 85vh; overflow-y: auto; padding: 10px; pointer-events:auto;}
 .paper{position:relative;width:100%;padding:4vh 2vh;text-align:center;background-color:var(--paper);background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");border-radius:8px;box-shadow:0 15px 35px rgba(47,74,55,.1),0 0 0 1px rgba(176,141,69,.25);}
-
 .sal{font-family:var(--head); font-style:italic; font-size: 1.15rem; color:var(--forest); margin-bottom: 2vh; font-weight: 500;}
 .sal2{font-family:var(--head); font-style:italic; font-size: 1.15rem; color:var(--forest); margin-top: 2vh; font-weight: 500;}
 .paper p{font-size:0.9rem; line-height:1.7; margin:1vh 0; color: var(--ink);}
 .nm{font-family:var(--script); font-weight:400; font-size:clamp(3.2rem,10vw,4rem); line-height:1.1; color:var(--forest); margin:2vh 0; text-shadow: 1px 1px 0 rgba(176,141,69,.15); animation: floatText 5s ease-in-out infinite alternate-reverse;}
 .dt{font-family:var(--sans); font-weight:700; font-size: 0.85rem; letter-spacing: 0.15em; color: #9a7633; display: inline-block; padding: 0.2rem 0; border-bottom: 1px solid rgba(176,141,69,0.5);}
-
 .floral-bg { position: absolute; top: 0; left: 0; width: 120px; height: 120px; pointer-events: none; z-index: 0; opacity: 0.7; transform-origin: top left; animation: swayFlower 6s ease-in-out infinite alternate; }
 .floral-corner-paper-tl { position: absolute; top: -10px; left: -10px; width: 80px; height: 80px; pointer-events: none; z-index: 0; opacity: 0.3; transform-origin: top left; animation: swayFlower 7s ease-in-out infinite alternate; }
 .floral-corner-paper-br { position: absolute; bottom: -10px; right: -10px; width: 80px; height: 80px; pointer-events: none; z-index: 0; opacity: 0.3; transform-origin: bottom right; animation: swayFlowerBr 6.5s ease-in-out infinite alternate; }
 @keyframes swayFlower { 0% {transform: rotate(-3deg);} 100% {transform: rotate(3deg);} }
 @keyframes swayFlowerBr { 0% {transform: rotate(177deg);} 100% {transform: rotate(183deg);} }
-
 .names-gal{font-family:var(--head);font-weight:600;font-size:2rem;line-height:1.1;color:var(--forest);margin:.5vh 0; text-align: center; position:relative; z-index: 2;}
-
 .diag-gallery { position: relative; width: 100%; max-width: 380px; height: 50vh; min-height: 400px; max-height: 460px; margin: 2vh auto 3vh; z-index: 2;}
 .diag-item { position: absolute; width: 52%; background: var(--paper); padding: 6px 6px 2.2rem 6px; border-radius: 120px 120px 6px 6px; box-shadow: 0 15px 25px rgba(47,74,55,0.15); }
 .diag-tl { top: 0; left: 0; z-index: 2; }
 .diag-br { bottom: -2%; right: 0; z-index: 1; }
-
 .photo-inner{position:relative; width:100%; aspect-ratio:4/5; overflow:hidden; border-radius:114px 114px 2px 2px; background: #e0d8c3; z-index: 1;}
 .img-blur { width:100%; height:100%; object-fit:cover; display:block; filter: blur(10px); transform: scale(1.1); opacity: 0; transition: filter 0.5s ease, opacity 0.5s ease; backface-visibility: hidden; will-change: transform;}
 .img-blur.loaded { filter: blur(0); opacity: 1; animation: kenBurns 15s ease-in-out infinite alternate; }
 @keyframes kenBurns { 0% {transform: scale(1);} 100% {transform: scale(1.05);} }
 .photo-label { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 85%; background: #fff; padding: 6px 0; text-align: center; font-family: var(--sans); font-size: 0.65rem; font-weight: 600; color: var(--forest); letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.2; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 2; border-radius: 4px; border: 1px solid rgba(176,141,69,0.2);}
-
 .inv-wrap { width: 100%; max-width: 420px; max-height: 65vh; overflow-y: auto; padding: 1vh 10px; z-index: 2; pointer-events:auto;}
 .inv-list { list-style: none; padding: 0; margin: 0;}
 .inv-item { background: rgba(255, 253, 247, 0.85); border: 1.5px solid rgba(176,141,69,0.3); border-radius: 8px; margin-bottom: 1.5vh; padding: 2vh; text-align: center; box-shadow: 0 4px 12px rgba(47,74,55,0.06); transition: transform 0.3s;}
 .inv-name { font-family: var(--head); font-size: clamp(1.1rem, 2.5vh, 1.3rem); font-weight: 600; color: var(--forest); line-height: 1.2; margin-bottom: 0.5vh;}
 .inv-desc { font-family: var(--sans); font-size: clamp(0.55rem, 1.5vh, 0.65rem); color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;}
-
 .s3-grid { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; min-height: 85vh; gap: 3.5vh; padding: 3vh 0; z-index: 2; }
 .cd-wrap { text-align: center; width: 100%; flex-shrink: 0; }
 .cd-title-count { font-family:var(--head); font-size:clamp(1.5rem, 4vh, 2rem); font-weight:600; color:var(--forest); letter-spacing:0.1em; line-height:1; }
@@ -143,7 +122,6 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 @keyframes heartbeat { 0%, 20%, 100% { transform: scale(1); } 10% { transform: scale(1.15); color: var(--gold); } }
 .cd-label{font-family:var(--sans); font-size:clamp(0.45rem, 1.2vh, 0.55rem); letter-spacing:0.1em; font-weight:600; text-transform:uppercase; color:var(--ink); margin-top: 0.5vh;}
 .cd-sep{font-family:var(--head); font-size:clamp(1.5rem, 4vh, 2rem); font-weight:400; color:var(--ink); transform: translateY(-0.8vh);}
-
 .cal-wrap { width: 100%; max-width: 300px; text-align: center; flex-shrink: 0; }
 .cal-title{font-family:var(--script); font-size:clamp(2.5rem, 7vh, 3.5rem); color:var(--forest); line-height:1; margin-bottom:1.5vh;}
 .cal-grid{display:grid; grid-template-columns:repeat(7, 1fr); gap:0.2rem; width:100%; font-family:var(--sans); color:var(--ink);}
@@ -151,7 +129,6 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 .cal-date{font-size:clamp(0.75rem, 2vh, 0.85rem); font-weight:500; display:flex; align-items:center; justify-content:center; aspect-ratio:1;}
 .cal-mark{background:var(--forest); color:#fff; border-radius:50%; box-shadow: 0 4px 8px rgba(47,74,55,0.4); position:relative; animation: pulseGlow 2s infinite;}
 .cal-mark::before{content:""; position:absolute; inset:-3px; border:1px solid var(--gold); border-radius:50%;}
-
 .map-wrap { width: 100%; display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin-top: 1vh; pointer-events:auto;}
 .map-env { position: relative; width: min(75vw, 260px); height: 14vh; min-height: 90px; background: #2f4a37; border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; }
 .map-env::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom right, transparent 49%, rgba(0,0,0,0.15) 50%, transparent 51%); pointer-events:none;}
@@ -161,7 +138,6 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 .map-oval p { font-family: var(--head); font-size: clamp(0.8rem, 2vh, 1rem); color: var(--ink); margin-bottom: 8px; }
 .map-btn { font-family: var(--sans); font-size: clamp(0.45rem, 1.2vh, 0.55rem); font-weight: 600; letter-spacing: 0.1em; color: var(--forest); background: linear-gradient(180deg,#fffaf0,#f0e2bf); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--gold); box-shadow: 0 4px 10px rgba(176,141,69,0.3); text-decoration: none; text-transform: uppercase; position: relative; }
 .map-btn::after {content:""; position:absolute; inset:-4px; border-radius:30px; border:1.5px solid var(--gold); animation: ripple 1.5s infinite ease-out;}
-
 .s3-bottom { text-align: center; margin-top: 1vh; flex-shrink: 0; display:flex; gap:10px; justify-content:center; pointer-events:auto;}
 .music{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:20;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:rgba(255,250,236,.95);color:var(--forest);cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 16px rgba(80,60,30,.25);transition:transform .3s; pointer-events:auto;}
 .music svg{width:18px;height:18px}.music.on{animation:pl 2.4s ease-in-out infinite}
@@ -331,221 +307,202 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 </main>
 <button class="music" id="btnMusic" type="button" aria-label="Putar musik"><svg id="icPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg id="icPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
 
-<script>
-/* ===============================================================
-   KONFIGURASI DEFAULT / FALLBACK
-=============================================================== */
-var cfg = {
-  title: "The Wedding of Andre & Shella", kicker: "The Wedding of",
-  nPria: "Andre Irawan", nWanita: "Shella Trisnawati", nPendek: "Andre & Shella", inisial: "A & S",
-  txtSalam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
-  txtPembuka: "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara resepsi pernikahan putra-putri kami:",
-  txtTengah: "dengan",
-  txtIsi: "(Telah melangsungkan akad nikah). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
-  txtPenutup: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
-  txtSalamAkhir: "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
-  tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
-  galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai", lblFoto2: "Andre & Shella",
-  
-  mengundang: [
-    { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }, 
-    { nama: "Keluarga Bp. Samaan", desc: "Tangerang" }
-  ],
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-  cdTitle1: "MENJELANG", cdTitle2: "HARI - H", targetDate: "2026-10-27T08:00:00",
-  calBulan: "Oktober", calTanggal: "27", gdg: "Alamat Resepsi", 
-  map: "https://www.google.com/maps/place/...",
-  f1: "pama.png", f2: "mempelai.jpeg", musik: "LAGU.mp3"
+const firebaseConfig = {
+  apiKey: "AIzaSyD_3bnkqLFwa-ezGQmC1IfJoVo-NWtasKs",
+  authDomain: "arvolution-e509e.firebaseapp.com",
+  projectId: "arvolution-e509e",
+  storageBucket: "arvolution-e509e.firebasestorage.app",
+  messagingSenderId: "87654864105",
+  appId: "1:87654864105:web:74fed1590a75f66eb68c78",
+  measurementId: "G-6Q852MVGDH"
 };
 
-(function(){
-  "use strict";
-  var $ = function(id) { return document.getElementById(id); };
-  var root = document.documentElement;
-  var st = { slide: "cover", busy: false, music: false };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  /* SINKRONISASI DATA DARI ADMIN PANEL (LOCAL STORAGE) */
+// Data default jika gagal load
+var cfg = {
+  title: "The Wedding of Andre & Shella", kicker: "The Wedding of", nPria: "Andre Irawan", nWanita: "Shella Trisnawati", 
+  nPendek: "Andre & Shella", inisial: "A & S", txtSalam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
+  txtPembuka: "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara resepsi pernikahan putra-putri kami:",
+  txtTengah: "dengan", txtIsi: "(Telah melangsungkan akad nikah). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
+  txtPenutup: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
+  txtSalamAkhir: "Wassalamu'alaikum Warahmatullahi Wabarakatuh", tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
+  galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai", lblFoto2: "Andre & Shella",
+  cdTitle1: "MENJELANG", cdTitle2: "HARI - H", targetDate: "2026-10-27T08:00:00",
+  calBulan: "Oktober", calTanggal: "27", gdg: "Alamat Resepsi", map: "https://www.google.com/maps/place/...",
+  mengundang: [{ nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }]
+};
+
+var $ = function(id) { return document.getElementById(id); };
+var root = document.documentElement;
+var st = { slide: "cover", busy: false, music: false };
+var audio = new Audio();
+audio.loop = true;
+audio.volume = 0.7;
+
+async function loadFirebaseData() {
   try {
-    const localCfg = JSON.parse(localStorage.getItem("wed_cfg"));
-    if (localCfg) Object.assign(cfg, localCfg);
-  } catch(e) {}
-
-  var sparkBox = $("sparklesBox");
-  if(sparkBox) {
-    for(var i=0; i<25; i++) {
-      var d = document.createElement("div"); d.className = "sparkle";
-      d.style.left = Math.random() * 100 + "vw";
-      d.style.animationDuration = (Math.random() * 6 + 4) + "s, " + (Math.random() * 2 + 2) + "s";
-      d.style.animationDelay = "-" + (Math.random() * 5) + "s, 0s";
-      sparkBox.appendChild(d);
-    }
-  }
-
-  function burstMagic() {
-    var c = $("magicContainer"); if(!c) return;
-    for(var i=0; i<15; i++) {
-      var d = document.createElement("div"); d.className = "magic-dust";
-      var angle = Math.random() * Math.PI * 2; var dist = Math.random() * 60 + 30;
-      d.style.setProperty("--tx", Math.cos(angle) * dist + "px");
-      d.style.setProperty("--ty", Math.sin(angle) * dist + "px");
-      d.style.animation = "burst 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards";
-      c.appendChild(d);
-    }
-  }
-
-  function renderData() {
-    try {
-      document.title = cfg.title || "Undangan Pernikahan";
-      if($("cvKicker")) $("cvKicker").textContent = cfg.kicker || "";
-      if($("cvName")) $("cvName").innerHTML = (cfg.nPria || "") + "<small>&amp;</small>" + (cfg.nWanita || "");
-      if($("cvInisial")) {
-        var inisial = cfg.inisial || "A & S"; var parts = inisial.split(" & ");
-        $("cvInisial").innerHTML = parts.length > 1 ? parts[0] + " <span>&</span> " + parts[1] : inisial;
-      }
-      if($("cvSeal")) $("cvSeal").textContent = (cfg.inisial || "").replace(/\s+/g, '');
-      if($("nmPria")) $("nmPria").textContent = cfg.nPria || "";
-      if($("nmWanita")) $("nmWanita").textContent = cfg.nWanita || "";
-      if($("txtSalam")) $("txtSalam").textContent = cfg.txtSalam || "";
-      if($("txtPembuka")) $("txtPembuka").textContent = cfg.txtPembuka || "";
-      if($("txtTengah")) $("txtTengah").textContent = cfg.txtTengah || "";
+    const docSnap = await getDoc(doc(db, "wedding_data", "config"));
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      Object.assign(cfg, data);
       
-      if($("tglAkad")) {
-        if(cfg.tAkad) { $("tglAkad").textContent = cfg.tAkad; $("lineAkad").style.display = "block"; } 
-        else { $("lineAkad").style.display = "none"; }
-      }
-
-      if($("txtIsi")) $("txtIsi").textContent = cfg.txtIsi || "";
-      if($("txtPenutup")) $("txtPenutup").textContent = cfg.txtPenutup || "";
-      if($("txtSalamAkhir")) $("txtSalamAkhir").textContent = cfg.txtSalamAkhir || "";
-      if($("tglResepsi")) $("tglResepsi").textContent = cfg.tResepsi || "";
-      
-      if($("galKicker")) $("galKicker").textContent = cfg.galKicker || "";
-      if($("galName")) $("galName").innerHTML = (cfg.kicker || "") + "<br><span id='nmPendek'>" + (cfg.nPendek || "") + "</span>";
-      if($("lblFoto1")) $("lblFoto1").innerHTML = cfg.lblFoto1 || "";
-      if($("lblFoto2")) $("lblFoto2").innerHTML = cfg.lblFoto2 || "";
-      if($("cdTitle1")) $("cdTitle1").textContent = cfg.cdTitle1 || "";
-      if($("cdTitle2")) $("cdTitle2").textContent = cfg.cdTitle2 || "";
-      if($("calBulan")) $("calBulan").textContent = cfg.calBulan || "";
-      if($("calTanggal")) $("calTanggal").textContent = cfg.calTanggal || "";
-      if($("alamatName")) $("alamatName").textContent = cfg.gdg || "";
-
-      var invListHtml = "";
-      if(cfg.mengundang && Array.isArray(cfg.mengundang)) {
-        cfg.mengundang.forEach(function(inv, idx) {
-            invListHtml += "<li class='inv-item r' style='--d:" + (0.4 + (idx * 0.1)) + "s'><div class='inv-name'>" + inv.nama + "</div><div class='inv-desc'>" + inv.desc + "</div></li>";
-        });
-      }
-      if($("invList")) $("invList").innerHTML = invListHtml;
-    } catch(e) {}
+      // Load Foto & Musik dari Firestore Storage URLs
+      if(data.f1_url) { $("foto1").src = data.f1_url; $("foto1").onload = () => $("foto1").classList.add("loaded"); }
+      if(data.f2_url) { $("foto2").src = data.f2_url; $("foto2").onload = () => $("foto2").classList.add("loaded"); }
+      if(data.musik_url) { audio.src = data.musik_url; }
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data Firebase", error);
   }
-
-  var audio = new Audio();
-  audio.loop = true;
-  audio.volume = 0.7;
-  audio.src = cfg.musik;
-
-  function loadFileLocal(dbKey, fallbackSrc, callback) {
-    try {
-        const dbReq = indexedDB.open("wbphotos", 1);
-        dbReq.onsuccess = (e) => {
-          try {
-            const tx = e.target.result.transaction("p", "readonly");
-            const req = tx.objectStore("p").get(dbKey);
-            req.onsuccess = (ev) => {
-              if (ev.target.result && ev.target.result.blob) {
-                callback(URL.createObjectURL(ev.target.result.blob));
-              } else { callback(fallbackSrc); }
-            };
-          } catch(err) { callback(fallbackSrc); }
-        };
-        dbReq.onerror = () => { callback(fallbackSrc); };
-    } catch(err) { callback(fallbackSrc); }
-  }
-
   renderData();
+}
 
-  loadFileLocal("f1", cfg.f1, (src) => { if($("foto1")) { $("foto1").src = src; $("foto1").onload = () => $("foto1").classList.add("loaded"); } });
-  loadFileLocal("f2", cfg.f2, (src) => { if($("foto2")) { $("foto2").src = src; $("foto2").onload = () => $("foto2").classList.add("loaded"); } });
-  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; }); 
+var sparkBox = $("sparklesBox");
+if(sparkBox) {
+  for(var i=0; i<25; i++) {
+    var d = document.createElement("div"); d.className = "sparkle";
+    d.style.left = Math.random() * 100 + "vw";
+    d.style.animationDuration = (Math.random() * 6 + 4) + "s, " + (Math.random() * 2 + 2) + "s";
+    d.style.animationDelay = "-" + (Math.random() * 5) + "s, 0s";
+    sparkBox.appendChild(d);
+  }
+}
 
-  function arm(id){
-    var s = $(id); if(!s) return;
-    var els = s.querySelectorAll(".r,.rs,.diag-item,.cd-wrap,.cal-wrap,.map-wrap,.s3-bottom,.inv-item,.btn");
-    s.classList.remove("settled");
-    for(var i=0; i<els.length; i++) { els[i].classList.remove("in"); }
-    void s.offsetWidth;
-    for(var i=0; i<els.length; i++) { els[i].classList.add("in"); }
+function burstMagic() {
+  var c = $("magicContainer"); if(!c) return;
+  for(var i=0; i<15; i++) {
+    var d = document.createElement("div"); d.className = "magic-dust";
+    var angle = Math.random() * Math.PI * 2; var dist = Math.random() * 60 + 30;
+    d.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+    d.style.setProperty("--ty", Math.sin(angle) * dist + "px");
+    d.style.animation = "burst 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards";
+    c.appendChild(d);
+  }
+}
+
+function renderData() {
+  document.title = cfg.title || "Undangan Pernikahan";
+  if($("cvKicker")) $("cvKicker").textContent = cfg.kicker || "";
+  if($("cvName")) $("cvName").innerHTML = (cfg.nPria || "") + "<small>&amp;</small>" + (cfg.nWanita || "");
+  if($("cvInisial")) { var inisial = cfg.inisial || "A & S"; var parts = inisial.split(" & "); $("cvInisial").innerHTML = parts.length > 1 ? parts[0] + " <span>&</span> " + parts[1] : inisial; }
+  if($("cvSeal")) $("cvSeal").textContent = (cfg.inisial || "").replace(/\s+/g, '');
+  if($("nmPria")) $("nmPria").textContent = cfg.nPria || "";
+  if($("nmWanita")) $("nmWanita").textContent = cfg.nWanita || "";
+  if($("txtSalam")) $("txtSalam").textContent = cfg.txtSalam || "";
+  if($("txtPembuka")) $("txtPembuka").textContent = cfg.txtPembuka || "";
+  if($("txtTengah")) $("txtTengah").textContent = cfg.txtTengah || "";
+  
+  if($("tglAkad")) {
+    if(cfg.tAkad) { $("tglAkad").textContent = cfg.tAkad; $("lineAkad").style.display = "block"; } 
+    else { $("lineAkad").style.display = "none"; }
   }
 
-  function go(to, from, btn){
-    if(st.busy || st.slide === to) return; st.busy = true;
-    var r = btn.getBoundingClientRect();
-    root.style.setProperty("--x", (r.left + r.width / 2) + "px");
-    root.style.setProperty("--y", (r.top + r.height / 2) + "px");
-    var ring = $("ring"); ring.classList.remove("go"); void ring.offsetWidth; ring.classList.add("go");
-    var A = $(to), B = $(from); A.scrollTop = 0; arm(to);
-    A.classList.add("active", "iris"); B.classList.add("leaving");
-    setTimeout(function(){
-      A.classList.remove("iris"); B.classList.remove("active", "leaving");
-      ring.classList.remove("go"); st.slide = to; st.busy = false;
-    }, 800);
+  if($("txtIsi")) $("txtIsi").textContent = cfg.txtIsi || "";
+  if($("txtPenutup")) $("txtPenutup").textContent = cfg.txtPenutup || "";
+  if($("txtSalamAkhir")) $("txtSalamAkhir").textContent = cfg.txtSalamAkhir || "";
+  if($("tglResepsi")) $("tglResepsi").textContent = cfg.tResepsi || "";
+  if($("galKicker")) $("galKicker").textContent = cfg.galKicker || "";
+  if($("galName")) $("galName").innerHTML = (cfg.kicker || "") + "<br><span id='nmPendek'>" + (cfg.nPendek || "") + "</span>";
+  if($("lblFoto1")) $("lblFoto1").innerHTML = cfg.lblFoto1 || "";
+  if($("lblFoto2")) $("lblFoto2").innerHTML = cfg.lblFoto2 || "";
+  if($("cdTitle1")) $("cdTitle1").textContent = cfg.cdTitle1 || "";
+  if($("cdTitle2")) $("cdTitle2").textContent = cfg.cdTitle2 || "";
+  if($("calBulan")) $("calBulan").textContent = cfg.calBulan || "";
+  if($("calTanggal")) $("calTanggal").textContent = cfg.calTanggal || "";
+  if($("alamatName")) $("alamatName").textContent = cfg.gdg || "";
+
+  var invListHtml = "";
+  if(cfg.mengundang && Array.isArray(cfg.mengundang)) {
+    cfg.mengundang.forEach(function(inv, idx) {
+        invListHtml += "<li class='inv-item r' style='--d:" + (0.4 + (idx * 0.1)) + "s'><div class='inv-name'>" + inv.nama + "</div><div class='inv-desc'>" + inv.desc + "</div></li>";
+    });
   }
+  if($("invList")) $("invList").innerHTML = invListHtml;
+}
 
-  function ui(on) {
-    st.music = on; var b = $("btnMusic");
-    if(b) { if(on) b.classList.add("on"); else b.classList.remove("on"); }
-    if($("icPlay")) $("icPlay").style.display = on ? "none" : "";
-    if($("icPause")) $("icPause").style.display = on ? "" : "none";
-  }
+function arm(id){
+  var s = $(id); if(!s) return;
+  var els = s.querySelectorAll(".r,.rs,.diag-item,.cd-wrap,.cal-wrap,.map-wrap,.s3-bottom,.inv-item,.btn");
+  s.classList.remove("settled");
+  for(var i=0; i<els.length; i++) { els[i].classList.remove("in"); }
+  void s.offsetWidth;
+  for(var i=0; i<els.length; i++) { els[i].classList.add("in"); }
+}
 
-  function playMusic() {
-      try {
-          var p = audio.play();
-          if(p && p.then) { p.then(() => ui(true)).catch(() => ui(false)); }
-      } catch(e) { ui(false); }
-  }
+function go(to, from, btn){
+  if(st.busy || st.slide === to) return; st.busy = true;
+  var r = btn.getBoundingClientRect();
+  root.style.setProperty("--x", (r.left + r.width / 2) + "px");
+  root.style.setProperty("--y", (r.top + r.height / 2) + "px");
+  var ring = $("ring"); ring.classList.remove("go"); void ring.offsetWidth; ring.classList.add("go");
+  var A = $(to), B = $(from); A.scrollTop = 0; arm(to);
+  A.classList.add("active", "iris"); B.classList.add("leaving");
+  setTimeout(function(){
+    A.classList.remove("iris"); B.classList.remove("active", "leaving");
+    ring.classList.remove("go"); st.slide = to; st.busy = false;
+  }, 800);
+}
 
-  function openLetter() {
-    if(st.busy) return; st.busy = true; burstMagic();
-    var c = $("cover"); c.classList.add("opening"); $("env").classList.add("open");
-    
-    if (!st.music) { playMusic(); }
+function ui(on) {
+  st.music = on; var b = $("btnMusic");
+  if(b) { if(on) b.classList.add("on"); else b.classList.remove("on"); }
+  if($("icPlay")) $("icPlay").style.display = on ? "none" : "";
+  if($("icPause")) $("icPause").style.display = on ? "" : "none";
+}
 
-    setTimeout(() => { c.classList.add("zoom"); }, 900);
-    setTimeout(() => { arm("s1"); $("s1").classList.add("active"); c.classList.remove("active"); st.slide = "s1"; st.busy = false; }, 1500);
-  }
+function playMusic() {
+  try {
+      var p = audio.play();
+      if(p && p.then) { p.then(() => ui(true)).catch(() => ui(false)); }
+  } catch(e) { ui(false); }
+}
 
-  if($("btnOpen")) { $("btnOpen").addEventListener("click", openLetter); }
-  if($("env")) { $("env").addEventListener("click", openLetter); }
-  if($("btnPhoto")) $("btnPhoto").addEventListener("click", function(e){ go("s2", "s1", e.currentTarget); });
-  if($("btnBackToS1_fromS2")) $("btnBackToS1_fromS2").addEventListener("click", function(e){ go("s1", "s2", e.currentTarget); });
-  if($("btnGoToMengundang")) $("btnGoToMengundang").addEventListener("click", function(e){ go("s3", "s2", e.currentTarget); });
-  if($("btnBackToS2_fromS3")) $("btnBackToS2_fromS3").addEventListener("click", function(e){ go("s2", "s3", e.currentTarget); });
-  if($("btnGoToAcara")) $("btnGoToAcara").addEventListener("click", function(e){ go("s4", "s3", e.currentTarget); });
-  if($("btnBackToS3_fromS4")) $("btnBackToS3_fromS4").addEventListener("click", function(e){ go("s3", "s4", e.currentTarget); });
-  if($("btnMaps")) $("btnMaps").addEventListener("click", function(e){ e.preventDefault(); window.open(cfg.map, "_blank"); });
+function openLetter() {
+  if(st.busy) return; st.busy = true; burstMagic();
+  var c = $("cover"); c.classList.add("opening"); $("env").classList.add("open");
+  if (!st.music) { playMusic(); }
+  setTimeout(() => { c.classList.add("zoom"); }, 900);
+  setTimeout(() => { arm("s1"); $("s1").classList.add("active"); c.classList.remove("active"); st.slide = "s1"; st.busy = false; }, 1500);
+}
 
-  if($("btnMusic")) $("btnMusic").addEventListener("click", function(){ if(st.music) { audio.pause(); ui(false); } else { playMusic(); } });
+if($("btnOpen")) { $("btnOpen").addEventListener("click", openLetter); }
+if($("env")) { $("env").addEventListener("click", openLetter); }
+if($("btnPhoto")) $("btnPhoto").addEventListener("click", function(e){ go("s2", "s1", e.currentTarget); });
+if($("btnBackToS1_fromS2")) $("btnBackToS1_fromS2").addEventListener("click", function(e){ go("s1", "s2", e.currentTarget); });
+if($("btnGoToMengundang")) $("btnGoToMengundang").addEventListener("click", function(e){ go("s3", "s2", e.currentTarget); });
+if($("btnBackToS2_fromS3")) $("btnBackToS2_fromS3").addEventListener("click", function(e){ go("s2", "s3", e.currentTarget); });
+if($("btnGoToAcara")) $("btnGoToAcara").addEventListener("click", function(e){ go("s4", "s3", e.currentTarget); });
+if($("btnBackToS3_fromS4")) $("btnBackToS3_fromS4").addEventListener("click", function(e){ go("s3", "s4", e.currentTarget); });
+if($("btnMaps")) $("btnMaps").addEventListener("click", function(e){ e.preventDefault(); window.open(cfg.map, "_blank"); });
 
-  setInterval(function() {
-    if(!cfg.targetDate) return;
-    var d = new Date(cfg.targetDate).getTime() - new Date().getTime();
-    if(d < 0) return;
-    if($("cd-d")) $("cd-d").innerText = Math.floor(d / 86400000).toString().padStart(2, '0');
-    if($("cd-h")) $("cd-h").innerText = Math.floor((d % 86400000) / 3600000).toString().padStart(2, '0');
-    if($("cd-m")) $("cd-m").innerText = Math.floor((d % 3600000) / 60000).toString().padStart(2, '0');
-    if($("cd-s")) $("cd-s").innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
-  }, 1000);
+if($("btnMusic")) $("btnMusic").addEventListener("click", function(){ if(st.music) { audio.pause(); ui(false); } else { playMusic(); } });
 
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
-    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
-    if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
-    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
-  });
+setInterval(function() {
+  if(!cfg.targetDate) return;
+  var d = new Date(cfg.targetDate).getTime() - new Date().getTime();
+  if(d < 0) return;
+  if($("cd-d")) $("cd-d").innerText = Math.floor(d / 86400000).toString().padStart(2, '0');
+  if($("cd-h")) $("cd-h").innerText = Math.floor((d % 86400000) / 3600000).toString().padStart(2, '0');
+  if($("cd-m")) $("cd-m").innerText = Math.floor((d % 3600000) / 60000).toString().padStart(2, '0');
+  if($("cd-s")) $("cd-s").innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
+}, 1000);
 
-})();
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
+  if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
+});
+
+// Mulai Load Firestore
+loadFirebaseData();
 </script>
 </body>
 </html>
