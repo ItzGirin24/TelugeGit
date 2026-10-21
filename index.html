@@ -18,7 +18,6 @@ html,body{height:100%;overflow:hidden;background:var(--ivory); touch-action: non
 body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
 .paused *{animation-play-state:paused!important}
 
-/* MENCEGAH FOTO BISA DI-DRAG / DISIMPAN */
 img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-events: none; }
 
 .bg-texture {position:fixed; inset:-50%; z-index:0; opacity:0.15; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c16.569 0 30 13.431 30 30S46.569 60 30 60 0 46.569 0 30 13.431 0 30 0zm0 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 10c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23b08d45' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E"); animation: spinBg 180s linear infinite;}
@@ -55,9 +54,6 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
 .rs i{display:inline-block;opacity:0}
 .rs.in i{animation:let 0.7s var(--bounce) both;animation-delay:calc(var(--d,0s) + var(--i)*25ms)}
 @keyframes let{from{opacity:0;transform:translateY(.3em) scale(.8)}to{opacity:1;transform:none}}
-
-/* GARIS DIHAPUS SEPENUHNYA */
-.gl { display: none !important; }
 
 .floating { animation: floatAnim 4s ease-in-out infinite; }
 .floating-del { animation: floatAnim 4s ease-in-out infinite 2s; }
@@ -226,7 +222,7 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
         <p class="r" style="--d:.5s; font-size: 0.85rem;" id="txtTengah"></p>
         <div class="nm rs" style="--d:.6s" id="nmWanita"></div>
         
-        <p class="r" style="--d:.7s" style="margin-top: 1.5vh;">pada tanggal <span class="dt" id="tglAkad"></span>.</p>
+        <p class="r" style="--d:.7s" style="margin-top: 1.5vh;" id="lineAkad">pada tanggal <span class="dt" id="tglAkad"></span>.</p>
         
         <p class="r" style="--d:.9s" id="txtIsi"></p>
         <p class="r" style="--d:1s"><span class="dt" id="tglResepsi"></span>.</p>
@@ -345,24 +341,20 @@ var cfg = {
   txtSalam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
   txtPembuka: "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara resepsi pernikahan putra-putri kami:",
   txtTengah: "dengan",
-  txtIsi: "(Telah melangsungkan akad nikah pada tanggal 16 Oktober 2026). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
+  txtIsi: "(Telah melangsungkan akad nikah). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
   txtPenutup: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
   txtSalamAkhir: "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
   tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
-  galKicker: "Momen Berharga", lblFoto1: "A, Rojak Setiawan<br>&Jaeki dan Ibu Darmini", lblFoto2: "Andre & Shella",
+  galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai", lblFoto2: "Andre & Shella",
   
   mengundang: [
     { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }, 
-    { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
-    { nama: "Bos Wawan Hermawan", desc: "C.E.O PT Senang Jaya Abadi" }, 
-    { nama: "Pa Philipp", desc: "C.E.O PT Hasema Philipp" },
-    { nama: "Keluarga Besar Bpk. Sutrisno", desc: "Riau" },
-    { nama: "Keluarga Bp. Sumar (Alm)", desc: "Tangerang" }
+    { nama: "Keluarga Bp. Samaan", desc: "Tangerang" }
   ],
 
   cdTitle1: "MENJELANG", cdTitle2: "HARI - H", targetDate: "2026-10-27T08:00:00",
   calBulan: "Oktober", calTanggal: "27", gdg: "Alamat Resepsi", 
-  map: "https://www.google.com/maps/place/7%C2%B031'33.5%22S+109%C2%B003'13.0%22E/@-7.52598,109.0510369,17z",
+  map: "https://www.google.com/maps/place/...",
   f1: "pama.png", f2: "mempelai.jpeg", musik: "LAGU.mp3"
 };
 
@@ -413,15 +405,20 @@ var cfg = {
       if($("cvSeal")) $("cvSeal").textContent = (cfg.inisial || "").replace(/\s+/g, '');
       if($("nmPria")) $("nmPria").textContent = cfg.nPria || "";
       if($("nmWanita")) $("nmWanita").textContent = cfg.nWanita || "";
-      if($("nmPendek")) $("nmPendek").textContent = cfg.nPendek || "";
       if($("txtSalam")) $("txtSalam").textContent = cfg.txtSalam || "";
       if($("txtPembuka")) $("txtPembuka").textContent = cfg.txtPembuka || "";
       if($("txtTengah")) $("txtTengah").textContent = cfg.txtTengah || "";
+      
+      if($("tglAkad")) {
+        if(cfg.tAkad) { $("tglAkad").textContent = cfg.tAkad; $("lineAkad").style.display = "block"; } 
+        else { $("lineAkad").style.display = "none"; }
+      }
+
       if($("txtIsi")) $("txtIsi").textContent = cfg.txtIsi || "";
       if($("txtPenutup")) $("txtPenutup").textContent = cfg.txtPenutup || "";
       if($("txtSalamAkhir")) $("txtSalamAkhir").textContent = cfg.txtSalamAkhir || "";
-      if($("tglAkad")) $("tglAkad").style.display = "none"; 
       if($("tglResepsi")) $("tglResepsi").textContent = cfg.tResepsi || "";
+      
       if($("galKicker")) $("galKicker").textContent = cfg.galKicker || "";
       if($("galName")) $("galName").innerHTML = (cfg.kicker || "") + "<br><span id='nmPendek'>" + (cfg.nPendek || "") + "</span>";
       if($("lblFoto1")) $("lblFoto1").innerHTML = cfg.lblFoto1 || "";
@@ -442,13 +439,11 @@ var cfg = {
     } catch(e) {}
   }
 
-  // AUDIO SETUP DI AWAL AGAR BERSIAP
   var audio = new Audio();
   audio.loop = true;
   audio.volume = 0.7;
-  audio.src = cfg.musik; // Set fallback terlebih dahulu ("LAGU.mp3")
+  audio.src = cfg.musik;
 
-  // FUNGSI LOAD FILE (GAMBAR/MUSIK) DARI INDEXED DB
   function loadFileLocal(dbKey, fallbackSrc, callback) {
     try {
         const dbReq = indexedDB.open("wbphotos", 1);
@@ -469,10 +464,9 @@ var cfg = {
 
   renderData();
 
-  // Memuat data dari IndexedDB
   loadFileLocal("f1", cfg.f1, (src) => { if($("foto1")) { $("foto1").src = src; $("foto1").onload = () => $("foto1").classList.add("loaded"); } });
   loadFileLocal("f2", cfg.f2, (src) => { if($("foto2")) { $("foto2").src = src; $("foto2").onload = () => $("foto2").classList.add("loaded"); } });
-  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; }); // Menimpa audio.src jika ada di memori
+  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; }); 
 
   function arm(id){
     var s = $(id); if(!s) return;
@@ -507,9 +501,7 @@ var cfg = {
   function playMusic() {
       try {
           var p = audio.play();
-          if(p && p.then) {
-              p.then(() => ui(true)).catch(() => ui(false));
-          }
+          if(p && p.then) { p.then(() => ui(true)).catch(() => ui(false)); }
       } catch(e) { ui(false); }
   }
 
@@ -517,7 +509,6 @@ var cfg = {
     if(st.busy) return; st.busy = true; burstMagic();
     var c = $("cover"); c.classList.add("opening"); $("env").classList.add("open");
     
-    // PUTAR MUSIK SECARA OTOMATIS SAAT TOMBOL DITEKAN
     if (!st.music) { playMusic(); }
 
     setTimeout(() => { c.classList.add("zoom"); }, 900);
@@ -546,33 +537,12 @@ var cfg = {
     if($("cd-s")) $("cd-s").innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
   }, 1000);
 
-  // MENCEGAH PENGGUNAAN F12, INSPECT ELEMENT, DAN SHORTCUT DEVELOPER TOOLS LAINNYA
   document.addEventListener('keydown', function(e) {
-    // Blokir tombol F12
-    if (e.key === 'F12' || e.keyCode === 123) {
-      e.preventDefault();
-      return false;
-    }
-    // Blokir Ctrl+Shift+I (Inspect Element)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
-      e.preventDefault();
-      return false;
-    }
-    // Blokir Ctrl+Shift+J (Console)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
-      e.preventDefault();
-      return false;
-    }
-    // Blokir Ctrl+U (View Source)
-    if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
-      e.preventDefault();
-      return false;
-    }
-    // Blokir Ctrl+Shift+C (Inspect Element)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
-      e.preventDefault();
-      return false;
-    }
+    if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
   });
 
 })();
