@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin Dashboard · Undangan Pernikahan</title>
-<!-- Tailwind CSS via CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- FontAwesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -52,7 +50,6 @@
 </head>
 <body class="flex flex-col lg:flex-row h-screen w-full">
 
-  <!-- SIDEBAR -->
   <aside class="w-full lg:w-72 bg-[#283b2d] text-white flex flex-col shadow-2xl z-20 flex-shrink-0 lg:h-full h-auto">
     <div class="p-8 pb-4 text-center hidden lg:block">
       <div class="inline-flex w-20 h-20 bg-gradient-to-br from-[#e6cc8c] to-[#b08d45] rounded-full items-center justify-center text-4xl shadow-lg mb-2 text-[#283b2d]">
@@ -91,12 +88,11 @@
 
     <div class="p-5 bg-[#1e2d22] hidden lg:block border-t border-[#3a5240]">
       <button id="btnSaveMain" class="w-full border-none bg-gradient-to-r from-[#b08d45] to-[#e6cc8c] text-[#1e2d22] py-4 rounded-xl font-bold flex justify-center items-center gap-2 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 text-sm uppercase tracking-wide cursor-pointer">
-        <i class="fa-solid fa-floppy-disk text-lg"></i> Simpan Preview
+        <i class="fa-solid fa-floppy-disk text-lg"></i> Simpan ke Cloud
       </button>
     </div>
   </aside>
 
-  <!-- MAIN AREA -->
   <main class="flex-1 overflow-y-auto p-4 lg:p-12 relative bg-[#fbf6e9]">
     <div class="max-w-4xl mx-auto flex flex-col xl:flex-row gap-8">
       
@@ -232,7 +228,7 @@
         <div id="tab-foto" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-4 border-b pb-4"><i class="fa-solid fa-camera text-[#b08d45] mr-2"></i> Galeri & Musik</h2>
           <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-md border border-blue-200 mb-6 font-medium">
-            <i class="fa-solid fa-info-circle mr-1"></i> Data dan Media yang disimpan akan langsung dihubungkan ke file <strong>index.html</strong> melalui database browser.
+            <i class="fa-solid fa-cloud text-blue-500 mr-1"></i> Data dan Media sekarang akan disimpan langsung ke Firebase Cloud agar klien dapat mengaksesnya tanpa terkendala masalah local storage.
           </div>
           
           <div class="mb-6">
@@ -246,8 +242,7 @@
               <div class="file-drop relative shadow-sm" onclick="document.getElementById('f_foto1').click()">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p class="text-sm font-semibold text-gray-700">Pilih Foto 1</p>
-                <p class="text-xs text-gray-400 mt-1">Format: JPG/PNG (4:5)</p>
-                <input type="file" id="f_foto1" accept="image/*" class="hidden" onchange="previewImage(this, 'preview_f1')">
+                <input type="file" id="f_foto1" accept="image/*" class="hidden" onchange="window.previewImage(this, 'preview_f1')">
                 <img id="preview_f1" class="absolute inset-0 w-full h-full object-cover rounded-[0.9rem] opacity-0 transition-opacity" style="z-index: 10;">
               </div>
               <label class="mt-4">Label Teks Foto 1 (Gunakan &lt;br&gt; untuk enter)</label>
@@ -259,8 +254,7 @@
               <div class="file-drop relative shadow-sm" onclick="document.getElementById('f_foto2').click()">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p class="text-sm font-semibold text-gray-700">Pilih Foto 2</p>
-                <p class="text-xs text-gray-400 mt-1">Rekomendasi: Potrait 4:5</p>
-                <input type="file" id="f_foto2" accept="image/*" class="hidden" onchange="previewImage(this, 'preview_f2')">
+                <input type="file" id="f_foto2" accept="image/*" class="hidden" onchange="window.previewImage(this, 'preview_f2')">
                 <img id="preview_f2" class="absolute inset-0 w-full h-full object-cover rounded-[0.9rem] opacity-0 transition-opacity" style="z-index: 10;">
               </div>
               <label class="mt-4">Label Teks Foto 2</label>
@@ -289,7 +283,6 @@
         <iframe id="previewFrame" src="index.html"></iframe>
       </div>
     </aside>
-
   </main>
 
   <div id="loadingModal" class="flex">
@@ -297,18 +290,32 @@
     <p class="text-[#283b2d] font-bold text-lg" id="loadingText">Menyimpan Perubahan...</p>
   </div>
 
-<script>
-const dbReq = indexedDB.open("wbphotos", 1);
-let localDb;
-dbReq.onupgradeneeded = (e) => { e.target.result.createObjectStore("p", { keyPath: "id" }); };
-dbReq.onsuccess = (e) => { localDb = e.target.result; };
+<!-- TYPE MODULE AGAR BISA IMPORT FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+// KONFIGURASI FIREBASE KAMU
+const firebaseConfig = {
+  apiKey: "AIzaSyD_3bnkqLFwa-ezGQmC1IfJoVo-NWtasKs",
+  authDomain: "arvolution-e509e.firebaseapp.com",
+  projectId: "arvolution-e509e",
+  storageBucket: "arvolution-e509e.firebasestorage.app",
+  messagingSenderId: "87654864105",
+  appId: "1:87654864105:web:74fed1590a75f66eb68c78",
+  measurementId: "G-6Q852MVGDH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 const $ = id => document.getElementById(id);
-let guests = [
-  { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" },
-  { nama: "Keluarga Bp. Samaan", desc: "Tangerang" }
-];
+let guests = [];
+let currentConfig = {}; // Simpan state saat ini (untuk URL image lama jika tidak diupload baru)
 
+// TABS LOGIC
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -318,6 +325,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
+// HARUS DITEMPEL KE WINDOW AGAR BISA DIPANGGIL DARI HTML (onclick)
 window.previewImage = function(input, imgId) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
@@ -343,7 +351,7 @@ function renderGuestList() {
     div.className = "guest-item group transition-all hover:border-[#b08d45]";
     div.innerHTML = `
       <div><p class="font-bold text-sm text-[#283b2d]">${g.nama}</p><p class="text-xs text-[#b08d45] uppercase tracking-wider font-semibold mt-1">${g.desc}</p></div>
-      <button onclick="removeGuest(${idx})" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Hapus Tamu"><i class="fa-solid fa-trash-can"></i></button>
+      <button onclick="window.removeGuest(${idx})" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Hapus Tamu"><i class="fa-solid fa-trash-can"></i></button>
     `;
     container.appendChild(div);
   });
@@ -358,103 +366,113 @@ $("btnAddGuest").addEventListener("click", () => {
 
 window.removeGuest = function(idx) { guests.splice(idx, 1); renderGuestList(); }
 
-function loadData() {
-  let cfg = null;
-  try { cfg = JSON.parse(localStorage.getItem("wed_cfg")); } catch(e) {}
-  
-  if(cfg && cfg.nPria) {
-    $("i_title").value = cfg.title || "";
-    $("i_kicker").value = cfg.kicker || "";
-    $("i_nPria").value = cfg.nPria || ""; 
-    $("i_nWanita").value = cfg.nWanita || ""; 
-    $("i_nPendek").value = cfg.nPendek || "";
-    $("i_inisial").value = cfg.inisial || "";
-    
-    $("i_txtSalam").value = cfg.txtSalam || "";
-    $("i_txtPembuka").value = cfg.txtPembuka || "";
-    $("i_txtTengah").value = cfg.txtTengah || "";
-    $("i_txtIsi").value = cfg.txtIsi || "";
-    $("i_txtPenutup").value = cfg.txtPenutup || "";
-    $("i_txtSalamAkhir").value = cfg.txtSalamAkhir || "";
-    
-    if(cfg.tAkad !== undefined) $("i_tAkad").value = cfg.tAkad;
-    $("i_tResepsi").value = cfg.tResepsi || ""; 
-    $("i_cdTitle1").value = cfg.cdTitle1 || ""; 
-    $("i_cdTitle2").value = cfg.cdTitle2 || ""; 
-    $("i_targetDate").value = cfg.targetDate || "";
-    $("i_calBulan").value = cfg.calBulan || "";
-    $("i_calTanggal").value = cfg.calTanggal || "";
-    $("i_gdg").value = cfg.gdg || ""; 
-    $("i_map").value = cfg.map || "";
-
-    $("i_galKicker").value = cfg.galKicker || "";
-    $("i_lblFoto1").value = cfg.lblFoto1 || "";
-    $("i_lblFoto2").value = cfg.lblFoto2 || "";
-
-    if(cfg.mengundang && Array.isArray(cfg.mengundang)) guests = cfg.mengundang;
+// LOAD DATA DARI FIRESTORE SAAT HALAMAN DIBUKA
+async function loadData() {
+  try {
+    const docSnap = await getDoc(doc(db, "wedding_data", "config"));
+    if (docSnap.exists()) {
+      currentConfig = docSnap.data();
+      const cfg = currentConfig;
+      
+      if(cfg.nPria) {
+        $("i_title").value = cfg.title \vert{}\vert{} ""; $("i_kicker").value = cfg.kicker || "";
+        $("i_nPria").value = cfg.nPria \vert{}\vert{} ""; $("i_nWanita").value = cfg.nWanita || ""; 
+        $("i_nPendek").value = cfg.nPendek \vert{}\vert{} ""; $("i_inisial").value = cfg.inisial || "";
+        $("i_txtSalam").value = cfg.txtSalam \vert{}\vert{} ""; $("i_txtPembuka").value = cfg.txtPembuka || "";
+        $("i_txtTengah").value = cfg.txtTengah \vert{}\vert{} ""; $("i_txtIsi").value = cfg.txtIsi || "";
+        $("i_txtPenutup").value = cfg.txtPenutup \vert{}\vert{} ""; $("i_txtSalamAkhir").value = cfg.txtSalamAkhir || "";
+        if(cfg.tAkad !== undefined) $("i_tAkad").value = cfg.tAkad;
+        $("i_tResepsi").value = cfg.tResepsi \vert{}\vert{} ""; $("i_cdTitle1").value = cfg.cdTitle1 || ""; 
+        $("i_cdTitle2").value = cfg.cdTitle2 \vert{}\vert{} ""; $("i_targetDate").value = cfg.targetDate || "";
+        $("i_calBulan").value = cfg.calBulan \vert{}\vert{} ""; $("i_calTanggal").value = cfg.calTanggal || "";
+        $("i_gdg").value = cfg.gdg \vert{}\vert{} ""; $("i_map").value = cfg.map || "";
+        $("i_galKicker").value = cfg.galKicker || ""; $("i_lblFoto1").value = cfg.lblFoto1 \vert{}\vert{} ""; $("i_lblFoto2").value = cfg.lblFoto2 || "";
+        
+        if(cfg.mengundang && Array.isArray(cfg.mengundang)) guests = cfg.mengundang;
+        
+        // Tampilkan foto yg sudah ada dari url Firebase Storage
+        if(cfg.f1_url) { $("preview_f1").src = cfg.f1_url; $("preview_f1").style.opacity = "1"; }
+        if(cfg.f2_url) { $("preview_f2").src = cfg.f2_url; $("preview_f2").style.opacity = "1"; }
+      }
+    }
+  } catch (error) {
+    console.error("Gagal load Firebase:", error);
   }
   renderGuestList();
 }
 
-function saveFileLocal(id, file) {
-  return new Promise(resolve => {
-    if(!file) return resolve();
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      fetch(e.target.result).then(r => r.blob()).then(blob => {
-        try {
-            const tx = localDb.transaction("p", "readwrite");
-            tx.objectStore("p").put({ id: id, blob: blob });
-            tx.oncomplete = () => resolve();
-        } catch(err) { resolve(); }
-      });
-    };
-    reader.readAsDataURL(file);
-  });
+// UPLOAD KE FIREBASE STORAGE
+async function uploadFile(file, pathName) {
+  if(!file) return null;
+  const storageRef = ref(storage, 'wedding_assets/' + pathName);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
 }
 
+// SIMPAN SEMUA DATA KE FIRESTORE
 async function doSave() {
-  showLoading(true, "Menyimpan Data...");
+  showLoading(true, "Menyimpan ke Cloud...");
   
-  const newCfg = {
-    title: $("i_title").value, kicker: $("i_kicker").value,
-    nPria: $("i_nPria").value, nWanita: $("i_nWanita").value, 
-    nPendek: $("i_nPendek").value, inisial: $("i_inisial").value,
-    txtSalam: $("i_txtSalam").value, txtPembuka: $("i_txtPembuka").value, txtTengah: $("i_txtTengah").value,
-    txtIsi: $("i_txtIsi").value, txtPenutup: $("i_txtPenutup").value, txtSalamAkhir: $("i_txtSalamAkhir").value,
-    tAkad: $("i_tAkad").value, tResepsi: $("i_tResepsi").value, 
-    cdTitle1: $("i_cdTitle1").value, cdTitle2: $("i_cdTitle2").value, targetDate: $("i_targetDate").value,
-    calBulan: $("i_calBulan").value, calTanggal: $("i_calTanggal").value,
-    gdg: $("i_gdg").value, map: $("i_map").value,
-    galKicker: $("i_galKicker").value, lblFoto1: $("i_lblFoto1").value, lblFoto2: $("i_lblFoto2").value,
-    mengundang: guests, f1: "pama.jpeg", f2: "mempelai.jpeg", musik: "LAGU.mp3"
-  };
+  try {
+    const file1 = $("f_foto1").files[0]; 
+    const file2 = $("f_foto2").files[0]; 
+    const fileMusik = $("f_musik").files[0];
 
-  try { localStorage.setItem("wed_cfg", JSON.stringify(newCfg)); } catch(e) {}
-  
-  const file1 = $("f_foto1").files[0]; const file2 = $("f_foto2").files[0]; const fileMusik = $("f_musik").files[0];
-  if(file1) await saveFileLocal("f1", file1);
-  if(file2) await saveFileLocal("f2", file2);
-  if(fileMusik) await saveFileLocal("musik", fileMusik);
+    // Upload & dapatkan URL (hanya jika ada file baru yang dipilih)
+    let f1_url = currentConfig.f1_url || "";
+    let f2_url = currentConfig.f2_url || "";
+    let musik_url = currentConfig.musik_url || "";
 
-  $("previewFrame").src = "index.html?t=" + Date.now();
-  showLoading(false);
-  
-  [document.getElementById("btnSaveMain"), document.getElementById("btnSaveMobile")].forEach(btn => {
-    if(btn) {
-      const oldText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Disimpan!';
-      btn.style.background = "linear-gradient(to right, #4ade80, #22c55e)";
-      btn.style.color = "white";
-      setTimeout(() => { btn.innerHTML = oldText; btn.style.background = ""; btn.style.color = ""; }, 2000);
-    }
-  });
+    if(file1) f1_url = await uploadFile(file1, "foto1");
+    if(file2) f2_url = await uploadFile(file2, "foto2");
+    if(fileMusik) musik_url = await uploadFile(fileMusik, "musik.mp3");
+
+    const newCfg = {
+      title: $("i_title").value, kicker: $("i_kicker").value,
+      nPria: $("i_nPria").value, nWanita: $("i_nWanita").value, 
+      nPendek: $("i_nPendek").value, inisial: $("i_inisial").value,
+      txtSalam: $("i_txtSalam").value, txtPembuka: $("i_txtPembuka").value, txtTengah: $("i_txtTengah").value,
+      txtIsi: $("i_txtIsi").value, txtPenutup: $("i_txtPenutup").value, txtSalamAkhir: $("i_txtSalamAkhir").value,
+      tAkad: $("i_tAkad").value, tResepsi: $("i_tResepsi").value, 
+      cdTitle1: $("i_cdTitle1").value, cdTitle2: $("i_cdTitle2").value, targetDate: $("i_targetDate").value,
+      calBulan: $("i_calBulan").value, calTanggal: $("i_calTanggal").value,
+      gdg: $("i_gdg").value, map: $("i_map").value,
+      galKicker: $("i_galKicker").value, lblFoto1: $("i_lblFoto1").value, lblFoto2: $("i_lblFoto2").value,
+      mengundang: guests,
+      f1_url: f1_url,
+      f2_url: f2_url,
+      musik_url: musik_url
+    };
+
+    // Tulis data ke Firestore DB Document
+    await setDoc(doc(db, "wedding_data", "config"), newCfg);
+    
+    // Update local state biar URL tersimpan kalau ditekan simpan 2x tanpa upload ulang
+    currentConfig = newCfg;
+
+    $("previewFrame").src = "index.html?t=" + Date.now();
+    showLoading(false);
+    
+    [document.getElementById("btnSaveMain"), document.getElementById("btnSaveMobile")].forEach(btn => {
+      if(btn) {
+        const oldText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Berhasil Disimpan!';
+        btn.style.background = "linear-gradient(to right, #4ade80, #22c55e)";
+        btn.style.color = "white";
+        setTimeout(() => { btn.innerHTML = oldText; btn.style.background = ""; btn.style.color = ""; }, 2500);
+      }
+    });
+  } catch (error) {
+    showLoading(false);
+    alert("Gagal menyimpan ke Firebase: " + error.message);
+  }
 }
 
 if($("btnSaveMain")) $("btnSaveMain").addEventListener("click", doSave);
 if($("btnSaveMobile")) $("btnSaveMobile").addEventListener("click", doSave);
 if($("btnRefreshPreview")) $("btnRefreshPreview").addEventListener("click", () => { $("previewFrame").src = "index.html?t=" + Date.now(); });
 
+// Panggil data pertama kali
 window.onload = loadData;
 </script>
 </body>
