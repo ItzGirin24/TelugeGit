@@ -18,6 +18,7 @@ html,body{height:100%;overflow:hidden;background:var(--ivory); touch-action: non
 body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
 .paused *{animation-play-state:paused!important}
 
+/* MENCEGAH FOTO BISA DI-DRAG / DISIMPAN */
 img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-events: none; }
 
 .bg-texture {position:fixed; inset:-50%; z-index:0; opacity:0.15; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c16.569 0 30 13.431 30 30S46.569 60 30 60 0 46.569 0 30 13.431 0 30 0zm0 5c13.807 0 25 11.193 25 25S43.807 55 30 55 5 43.807 5 30 16.193 5 30 5zm0 10c8.284 0 15 6.716 15 15s-6.716 15-15 15-15-6.716-15-15 6.716-15 15-15z' fill='%23b08d45' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E"); animation: spinBg 180s linear infinite;}
@@ -222,7 +223,6 @@ img { -webkit-user-drag: none; user-drag: none; user-select: none; pointer-event
         <p class="r" style="--d:.2s" id="txtPembuka"></p>
         
         <div class="nm rs" style="--d:.3s" id="nmPria"></div>
-        <!-- GARIS DIHAPUS -->
         <p class="r" style="--d:.5s; font-size: 0.85rem;" id="txtTengah"></p>
         <div class="nm rs" style="--d:.6s" id="nmWanita"></div>
         
@@ -351,7 +351,6 @@ var cfg = {
   tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
   galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai Pria", lblFoto2: "Andre & Shella",
   
-  // DEFAULT 6 DAFTAR TAMU
   mengundang: [
     { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }, 
     { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
@@ -443,7 +442,13 @@ var cfg = {
     } catch(e) {}
   }
 
-  // Load File (Image/Audio) dari DB Lokal
+  // AUDIO SETUP DI AWAL AGAR BERSIAP
+  var audio = new Audio();
+  audio.loop = true;
+  audio.volume = 0.7;
+  audio.src = cfg.musik; // Set fallback terlebih dahulu ("LAGU.mp3")
+
+  // FUNGSI LOAD FILE (GAMBAR/MUSIK) DARI INDEXED DB
   function loadFileLocal(dbKey, fallbackSrc, callback) {
     try {
         const dbReq = indexedDB.open("wbphotos", 1);
@@ -464,9 +469,10 @@ var cfg = {
 
   renderData();
 
-  // Load Foto
+  // Memuat data dari IndexedDB
   loadFileLocal("f1", cfg.f1, (src) => { if($("foto1")) { $("foto1").src = src; $("foto1").onload = () => $("foto1").classList.add("loaded"); } });
   loadFileLocal("f2", cfg.f2, (src) => { if($("foto2")) { $("foto2").src = src; $("foto2").onload = () => $("foto2").classList.add("loaded"); } });
+  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; }); // Menimpa audio.src jika ada di memori
 
   function arm(id){
     var s = $(id); if(!s) return;
@@ -491,9 +497,29 @@ var cfg = {
     }, 800);
   }
 
+  function ui(on) {
+    st.music = on; var b = $("btnMusic");
+    if(b) { if(on) b.classList.add("on"); else b.classList.remove("on"); }
+    if($("icPlay")) $("icPlay").style.display = on ? "none" : "";
+    if($("icPause")) $("icPause").style.display = on ? "" : "none";
+  }
+
+  function playMusic() {
+      try {
+          var p = audio.play();
+          if(p && p.then) {
+              p.then(() => ui(true)).catch(() => ui(false));
+          }
+      } catch(e) { ui(false); }
+  }
+
   function openLetter() {
     if(st.busy) return; st.busy = true; burstMagic();
     var c = $("cover"); c.classList.add("opening"); $("env").classList.add("open");
+    
+    // PUTAR MUSIK SECARA OTOMATIS SAAT TOMBOL DITEKAN
+    if (!st.music) { playMusic(); }
+
     setTimeout(() => { c.classList.add("zoom"); }, 900);
     setTimeout(() => { arm("s1"); $("s1").classList.add("active"); c.classList.remove("active"); st.slide = "s1"; st.busy = false; }, 1500);
   }
@@ -508,20 +534,6 @@ var cfg = {
   if($("btnBackToS3_fromS4")) $("btnBackToS3_fromS4").addEventListener("click", function(e){ go("s3", "s4", e.currentTarget); });
   if($("btnMaps")) $("btnMaps").addEventListener("click", function(e){ e.preventDefault(); window.open(cfg.map, "_blank"); });
 
-  // PENGATURAN MUSIK
-  var audio = new Audio(); 
-  audio.loop = true; 
-  audio.preload = "auto";
-  
-  loadFileLocal("musik", cfg.musik, (src) => { audio.src = src; });
-
-  function ui(on) {
-    st.music = on; var b = $("btnMusic");
-    if(b) { if(on) b.classList.add("on"); else b.classList.remove("on"); }
-    if($("icPlay")) $("icPlay").style.display = on ? "none" : "";
-    if($("icPause")) $("icPause").style.display = on ? "" : "none";
-  }
-  function playMusic() { try { var p = audio.play(); if(p && p.then) { p.then(() => ui(true)).catch(() => ui(false)); } } catch(e) { ui(false); } }
   if($("btnMusic")) $("btnMusic").addEventListener("click", function(){ if(st.music) { audio.pause(); ui(false); } else { playMusic(); } });
 
   setInterval(function() {
@@ -534,35 +546,36 @@ var cfg = {
     if($("cd-s")) $("cd-s").innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
   }, 1000);
 
-})();
+  // MENCEGAH PENGGUNAAN F12, INSPECT ELEMENT, DAN SHORTCUT DEVELOPER TOOLS LAINNYA
+  document.addEventListener('keydown', function(e) {
+    // Blokir tombol F12
+    if (e.key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      return false;
+    }
+    // Blokir Ctrl+Shift+I (Inspect Element)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
+      e.preventDefault();
+      return false;
+    }
+    // Blokir Ctrl+Shift+J (Console)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
+      e.preventDefault();
+      return false;
+    }
+    // Blokir Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+      e.preventDefault();
+      return false;
+    }
+    // Blokir Ctrl+Shift+C (Inspect Element)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
+      e.preventDefault();
+      return false;
+    }
+  });
 
-document.addEventListener('keydown', function(e) {
-  // Blokir F12
-  if (e.key === 'F12' || e.keyCode === 123) {
-    e.preventDefault();
-    return false;
-  }
-  // Blokir Ctrl+Shift+I (Inspect Element)
-  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
-    e.preventDefault();
-    return false;
-  }
-  // Blokir Ctrl+Shift+J (Console)
-  if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
-    e.preventDefault();
-    return false;
-  }
-  // Blokir Ctrl+U (View Source)
-  if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
-    e.preventDefault();
-    return false;
-  }
-  // Blokir Ctrl+Shift+C (Inspect Element)
-  if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
-    e.preventDefault();
-    return false;
-  }
-});
+})();
 </script>
 </body>
 </html>
