@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Great+Vibes&family=Lora:wght@400;500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* CSS SAMA SEPERTI SEBELUMNYA */
 :root{--ivory:#fbf6e9;--cream:#f1e7d2;--paper:#fffdf7;--sage:#8ba58a;--forest:#283b2d;--gold:#b08d45;--gold2:#e6cc8c;--ink:#2a2a2a;--ink2:#4a4a4a;
 --head:"Cormorant Garamond",Georgia,serif;--body:"Lora",Georgia,serif;--sans:"Montserrat",Arial,sans-serif;--script:"Great Vibes",cursive;
 --ease:cubic-bezier(.2,.8,.2,1); --bounce:cubic-bezier(0.34, 1.56, 0.64, 1); --vh:100vh}
@@ -324,18 +323,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Data default jika gagal load
+// Pengaturan Default
 var cfg = {
-  title: "The Wedding of Andre & Shella", kicker: "The Wedding of", nPria: "Andre Irawan", nWanita: "Shella Trisnawati", 
+  title: "The Wedding of Andre & Shella", kicker: "The Wedding of", nPria: "Andre Irawan", nWanita: "Shella Trisnawati, S.E.", 
   nPendek: "Andre & Shella", inisial: "A & S", txtSalam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
   txtPembuka: "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara resepsi pernikahan putra-putri kami:",
   txtTengah: "dengan", txtIsi: "(Telah melangsungkan akad nikah). Sebagai ungkapan syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir pada acara Resepsi Pernikahan yang insyaallah akan dilaksanakan pada tanggal",
   txtPenutup: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
   txtSalamAkhir: "Wassalamu'alaikum Warahmatullahi Wabarakatuh", tAkad: "16 Oktober 2026", tResepsi: "27 Oktober 2026", 
-  galKicker: "Momen Berharga", lblFoto1: "Orang Tua<br>Mempelai", lblFoto2: "Andre & Shella",
+  galKicker: "Momen Berharga", lblFoto1: "A, Rojak Setiawan / Jaeki & Ibu Darmini", lblFoto2: "Andre & Shella",
   cdTitle1: "MENJELANG", cdTitle2: "HARI - H", targetDate: "2026-10-27T08:00:00",
   calBulan: "Oktober", calTanggal: "27", gdg: "Alamat Resepsi", map: "https://www.google.com/maps/place/...",
-  mengundang: [{ nama: "Keluarga Bp. Muhyadi", desc: "Lubar" }]
+  
+  // DEFAULT TAMU
+  mengundang: [
+    { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" },
+    { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
+    { nama: "Bos Wawan Hermawan", desc: "C.E.O PT Senang Jaya Abadi, Cirebon" },
+    { nama: "Pa Philip", desc: "C.E.O PT Hasema Philip, Bogor" },
+    { nama: "Keluarga Besar Bapak Sutrisno", desc: "Riau" },
+    { nama: "Keluarga Bp. Sumar (Alm)", desc: "Tangerang" }
+  ],
+  
+  // Default Gambar & Musik Sesuai Permintaan
+  f1_url: "pama.jpeg", 
+  f2_url: "mempelai.jpeg", 
+  musik_url: "LAGU.mp3"
 };
 
 var $ = function(id) { return document.getElementById(id); };
@@ -350,16 +363,26 @@ async function loadFirebaseData() {
     const docSnap = await getDoc(doc(db, "wedding_data", "config"));
     if (docSnap.exists()) {
       const data = docSnap.data();
-      Object.assign(cfg, data);
-      
-      // Load Foto & Musik dari Firestore Storage URLs
-      if(data.f1_url) { $("foto1").src = data.f1_url; $("foto1").onload = () => $("foto1").classList.add("loaded"); }
-      if(data.f2_url) { $("foto2").src = data.f2_url; $("foto2").onload = () => $("foto2").classList.add("loaded"); }
-      if(data.musik_url) { audio.src = data.musik_url; }
+      // Timpa hanya data yang ada di firebase ke object cfg
+      for (const key in data) {
+        if (data[key] !== undefined && data[key] !== "") {
+          // Khusus tamu, jika kosong (karena pernah disimpan kosong), kita gunakan default agar tidak hilang
+          if (key === "mengundang" && (!Array.isArray(data[key]) || data[key].length === 0)) {
+             continue; // Tetap gunakan default cfg.mengundang
+          }
+          cfg[key] = data[key];
+        }
+      }
     }
   } catch (error) {
     console.error("Gagal mengambil data Firebase", error);
   }
+  
+  // Terapkan Gambar & Musik
+  if($("foto1")) { $("foto1").src = cfg.f1_url; $("foto1").onload = () => $("foto1").classList.add("loaded"); }
+  if($("foto2")) { $("foto2").src = cfg.f2_url; $("foto2").onload = () => $("foto2").classList.add("loaded"); }
+  audio.src = cfg.musik_url;
+  
   renderData();
 }
 

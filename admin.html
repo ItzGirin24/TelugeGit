@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -116,7 +116,7 @@
             </div>
             <div>
               <label>Nama Mempelai Wanita</label>
-              <input type="text" id="i_nWanita" class="input-field" value="Shella Trisnawati">
+              <input type="text" id="i_nWanita" class="input-field" value="Shella Trisnawati, S.E.">
             </div>
             <div>
               <label>Nama Panggilan / Judul Pendek</label>
@@ -211,15 +211,15 @@
         <!-- TAB 4 -->
         <div id="tab-tamu" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-2 border-b pb-4"><i class="fa-solid fa-list-check text-[#b08d45] mr-2"></i> Turut Mengundang</h2>
-          <p class="text-sm text-gray-500 mb-6">Kelola daftar pihak/keluarga yang turut mengundang.</p>
+          <p class="text-sm text-gray-500 mb-6">Kelola daftar pihak/keluarga yang turut mengundang. Bisa ditambahkan, diedit, atau dihapus.</p>
           
-          <div class="flex flex-col sm:flex-row gap-3 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <div class="flex flex-col sm:flex-row gap-3 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm">
             <input type="text" id="newGuestName" class="input-field bg-white" placeholder="Nama (Cth: Keluarga Bp. Muhyadi)">
             <input type="text" id="newGuestDesc" class="input-field bg-white" placeholder="Ket (Cth: Lubar)">
-            <button id="btnAddGuest" class="btn-primary shrink-0 whitespace-nowrap border-none"><i class="fa-solid fa-plus"></i> Tambah</button>
+            <button id="btnAddGuest" class="btn-primary shrink-0 whitespace-nowrap border-none"><i class="fa-solid fa-plus mr-1"></i> Tambah</button>
           </div>
 
-          <div id="guestListContainer" class="max-h-[400px] overflow-y-auto pr-2">
+          <div id="guestListContainer" class="max-h-[400px] overflow-y-auto pr-2 space-y-2">
             <!-- List tamu via JS -->
           </div>
         </div>
@@ -228,7 +228,7 @@
         <div id="tab-foto" class="tab-content glass-panel p-6 lg:p-8 rounded-2xl">
           <h2 class="text-2xl font-serif font-bold text-[#283b2d] mb-4 border-b pb-4"><i class="fa-solid fa-camera text-[#b08d45] mr-2"></i> Galeri & Musik</h2>
           <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-md border border-blue-200 mb-6 font-medium">
-            <i class="fa-solid fa-cloud text-blue-500 mr-1"></i> Data dan Media sekarang akan disimpan langsung ke Firebase Cloud agar klien dapat mengaksesnya tanpa terkendala masalah local storage.
+            <i class="fa-solid fa-cloud text-blue-500 mr-1"></i> Data dan Media sekarang akan disimpan langsung ke Firebase Cloud agar klien dapat mengaksesnya dengan lancar. Secara default akan memakai foto pama.jpeg dan mempelai.jpeg.
           </div>
           
           <div class="mb-6">
@@ -238,7 +238,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
-              <h3 class="font-bold text-gray-800 mb-3"><i class="fa-regular fa-image text-[#b08d45] mr-1"></i> Foto 1 (Kiri Atas)</h3>
+              <h3 class="font-bold text-gray-800 mb-3"><i class="fa-regular fa-image text-[#b08d45] mr-1"></i> Foto Keluarga (Kiri Atas)</h3>
               <div class="file-drop relative shadow-sm" onclick="document.getElementById('f_foto1').click()">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p class="text-sm font-semibold text-gray-700">Pilih Foto 1</p>
@@ -246,11 +246,11 @@
                 <img id="preview_f1" class="absolute inset-0 w-full h-full object-cover rounded-[0.9rem] opacity-0 transition-opacity" style="z-index: 10;">
               </div>
               <label class="mt-4">Label Teks Foto 1 (Gunakan &lt;br&gt; untuk enter)</label>
-              <input type="text" id="i_lblFoto1" class="input-field mt-1" value="Orang Tua<br>Mempelai">
+              <input type="text" id="i_lblFoto1" class="input-field mt-1" value="A, Rojak Setiawan / Jaeki & Ibu Darmini">
             </div>
 
             <div>
-              <h3 class="font-bold text-gray-800 mb-3"><i class="fa-regular fa-image text-[#b08d45] mr-1"></i> Foto 2 (Kanan Bawah)</h3>
+              <h3 class="font-bold text-gray-800 mb-3"><i class="fa-regular fa-image text-[#b08d45] mr-1"></i> Foto Mempelai (Kanan Bawah)</h3>
               <div class="file-drop relative shadow-sm" onclick="document.getElementById('f_foto2').click()">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p class="text-sm font-semibold text-gray-700">Pilih Foto 2</p>
@@ -290,13 +290,12 @@
     <p class="text-[#283b2d] font-bold text-lg" id="loadingText">Menyimpan Perubahan...</p>
   </div>
 
-<!-- TYPE MODULE AGAR BISA IMPORT FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-// KONFIGURASI FIREBASE KAMU
+// KONFIGURASI FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyD_3bnkqLFwa-ezGQmC1IfJoVo-NWtasKs",
   authDomain: "arvolution-e509e.firebaseapp.com",
@@ -312,8 +311,23 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 const $ = id => document.getElementById(id);
-let guests = [];
-let currentConfig = {}; // Simpan state saat ini (untuk URL image lama jika tidak diupload baru)
+
+// SET 6 TAMU DEFAULT JIKA DATABASE KOSONG
+let guests = [
+  { nama: "Keluarga Bp. Muhyadi", desc: "Lubar" },
+  { nama: "Keluarga Bp. Samaan", desc: "Tangerang" },
+  { nama: "Bos Wawan Hermawan", desc: "C.E.O PT Senang Jaya Abadi, Cirebon" },
+  { nama: "Pa Philip", desc: "C.E.O PT Hasema Philip, Bogor" },
+  { nama: "Keluarga Besar Bapak Sutrisno", desc: "Riau" },
+  { nama: "Keluarga Bp. Sumar (Alm)", desc: "Tangerang" }
+];
+
+let editGuestIndex = -1; 
+let currentConfig = { 
+  f1_url: "pama.jpeg", 
+  f2_url: "mempelai.jpeg", 
+  musik_url: "LAGU.mp3" 
+}; 
 
 // TABS LOGIC
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -325,7 +339,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// HARUS DITEMPEL KE WINDOW AGAR BISA DIPANGGIL DARI HTML (onclick)
 window.previewImage = function(input, imgId) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
@@ -339,6 +352,7 @@ function showLoading(show, text="Memproses...") {
   $("loadingModal").style.display = show ? "flex" : "none";
 }
 
+// LOGIC RENDER DAFTAR TAMU & EDIT TAMU
 function renderGuestList() {
   const container = $("guestListContainer");
   container.innerHTML = "";
@@ -349,48 +363,101 @@ function renderGuestList() {
   guests.forEach((g, idx) => {
     const div = document.createElement("div");
     div.className = "guest-item group transition-all hover:border-[#b08d45]";
+    
     div.innerHTML = `
-      <div><p class="font-bold text-sm text-[#283b2d]">${g.nama}</p><p class="text-xs text-[#b08d45] uppercase tracking-wider font-semibold mt-1">${g.desc}</p></div>
-      <button onclick="window.removeGuest(${idx})" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Hapus Tamu"><i class="fa-solid fa-trash-can"></i></button>
+      <div class="flex-1">
+        <p class="font-bold text-sm text-[#283b2d]">${g.nama}</p>
+        <p class="text-xs text-[#b08d45] uppercase tracking-wider font-semibold mt-1">${g.desc}</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="window.editGuest(${idx})" class="text-gray-400 hover:text-blue-500 bg-gray-50 hover:bg-blue-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Edit Tamu"><i class="fa-solid fa-pen"></i></button>
+        <button onclick="window.removeGuest(${idx})" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2.5 rounded-lg transition-colors cursor-pointer border-none" title="Hapus Tamu"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
     `;
     container.appendChild(div);
   });
 }
 
+// FUNGSI UNTUK MENGISI FORM SAAT TOMBOL EDIT DITEKAN
+window.editGuest = function(idx) {
+  editGuestIndex = idx; 
+  $("newGuestName").value = guests[idx].nama;
+  $("newGuestDesc").value = guests[idx].desc;
+  
+  const btn = $("btnAddGuest");
+  btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Update`;
+  btn.classList.replace("bg-[var(--primary)]", "bg-blue-600");
+  btn.classList.add("hover:bg-blue-700");
+}
+
 $("btnAddGuest").addEventListener("click", () => {
-  const n = $("newGuestName").value.trim(); const d = $("newGuestDesc").value.trim();
+  const n = $("newGuestName").value.trim(); 
+  const d = $("newGuestDesc").value.trim();
+  
   if(!n) return alert("Silakan masukkan nama tamu terlebih dahulu!");
-  guests.push({ nama: n, desc: d });
-  $("newGuestName").value = ""; $("newGuestDesc").value = ""; renderGuestList();
+  
+  if (editGuestIndex > -1) {
+    guests[editGuestIndex] = { nama: n, desc: d };
+    editGuestIndex = -1; 
+    
+    const btn = $("btnAddGuest");
+    btn.innerHTML = `<i class="fa-solid fa-plus mr-1"></i> Tambah`;
+    btn.className = "btn-primary shrink-0 whitespace-nowrap border-none bg-[var(--primary)] text-white";
+  } else {
+    guests.push({ nama: n, desc: d });
+  }
+  
+  $("newGuestName").value = ""; 
+  $("newGuestDesc").value = ""; 
+  renderGuestList();
 });
 
-window.removeGuest = function(idx) { guests.splice(idx, 1); renderGuestList(); }
+window.removeGuest = function(idx) { 
+  guests.splice(idx, 1); 
+  if (editGuestIndex === idx) {
+    $("newGuestName").value = "";
+    $("newGuestDesc").value = "";
+    editGuestIndex = -1;
+    $("btnAddGuest").innerHTML = `<i class="fa-solid fa-plus mr-1"></i> Tambah`;
+    $("btnAddGuest").className = "btn-primary shrink-0 whitespace-nowrap border-none bg-[var(--primary)] text-white";
+  }
+  renderGuestList(); 
+}
 
-// LOAD DATA DARI FIRESTORE SAAT HALAMAN DIBUKA
+// LOAD DATA DARI FIRESTORE
 async function loadData() {
   try {
     const docSnap = await getDoc(doc(db, "wedding_data", "config"));
     if (docSnap.exists()) {
-      currentConfig = docSnap.data();
-      const cfg = currentConfig;
+      const data = docSnap.data();
       
+      for (const key in data) {
+        if (data[key] !== undefined && data[key] !== "") {
+          // CEGAH MENIMPA JIKA TAMU KOSONG AGAR DEFAULT 6 TAMU TETAP MUNCUL JIKA DATABASE BLANK
+          if (key === "mengundang" && (!Array.isArray(data[key]) || data[key].length === 0)) {
+             continue;
+          }
+          currentConfig[key] = data[key];
+        }
+      }
+      
+      const cfg = currentConfig;
       if(cfg.nPria) {
-        $("i_title").value = cfg.title \vert{}\vert{} ""; $("i_kicker").value = cfg.kicker || "";
-        $("i_nPria").value = cfg.nPria \vert{}\vert{} ""; $("i_nWanita").value = cfg.nWanita || ""; 
-        $("i_nPendek").value = cfg.nPendek \vert{}\vert{} ""; $("i_inisial").value = cfg.inisial || "";
-        $("i_txtSalam").value = cfg.txtSalam \vert{}\vert{} ""; $("i_txtPembuka").value = cfg.txtPembuka || "";
-        $("i_txtTengah").value = cfg.txtTengah \vert{}\vert{} ""; $("i_txtIsi").value = cfg.txtIsi || "";
-        $("i_txtPenutup").value = cfg.txtPenutup \vert{}\vert{} ""; $("i_txtSalamAkhir").value = cfg.txtSalamAkhir || "";
+        $("i_title").value = cfg.title || ""; $("i_kicker").value = cfg.kicker || "";
+        $("i_nPria").value = cfg.nPria || ""; $("i_nWanita").value = cfg.nWanita || ""; 
+        $("i_nPendek").value = cfg.nPendek || ""; $("i_inisial").value = cfg.inisial || "";
+        $("i_txtSalam").value = cfg.txtSalam || ""; $("i_txtPembuka").value = cfg.txtPembuka || "";
+        $("i_txtTengah").value = cfg.txtTengah || ""; $("i_txtIsi").value = cfg.txtIsi || "";
+        $("i_txtPenutup").value = cfg.txtPenutup || ""; $("i_txtSalamAkhir").value = cfg.txtSalamAkhir || "";
         if(cfg.tAkad !== undefined) $("i_tAkad").value = cfg.tAkad;
-        $("i_tResepsi").value = cfg.tResepsi \vert{}\vert{} ""; $("i_cdTitle1").value = cfg.cdTitle1 || ""; 
-        $("i_cdTitle2").value = cfg.cdTitle2 \vert{}\vert{} ""; $("i_targetDate").value = cfg.targetDate || "";
-        $("i_calBulan").value = cfg.calBulan \vert{}\vert{} ""; $("i_calTanggal").value = cfg.calTanggal || "";
-        $("i_gdg").value = cfg.gdg \vert{}\vert{} ""; $("i_map").value = cfg.map || "";
-        $("i_galKicker").value = cfg.galKicker || ""; $("i_lblFoto1").value = cfg.lblFoto1 \vert{}\vert{} ""; $("i_lblFoto2").value = cfg.lblFoto2 || "";
+        $("i_tResepsi").value = cfg.tResepsi || ""; $("i_cdTitle1").value = cfg.cdTitle1 || ""; 
+        $("i_cdTitle2").value = cfg.cdTitle2 || ""; $("i_targetDate").value = cfg.targetDate || "";
+        $("i_calBulan").value = cfg.calBulan || ""; $("i_calTanggal").value = cfg.calTanggal || "";
+        $("i_gdg").value = cfg.gdg || ""; $("i_map").value = cfg.map || "";
+        $("i_galKicker").value = cfg.galKicker || ""; $("i_lblFoto1").value = cfg.lblFoto1 || ""; $("i_lblFoto2").value = cfg.lblFoto2 || "";
         
         if(cfg.mengundang && Array.isArray(cfg.mengundang)) guests = cfg.mengundang;
         
-        // Tampilkan foto yg sudah ada dari url Firebase Storage
         if(cfg.f1_url) { $("preview_f1").src = cfg.f1_url; $("preview_f1").style.opacity = "1"; }
         if(cfg.f2_url) { $("preview_f2").src = cfg.f2_url; $("preview_f2").style.opacity = "1"; }
       }
@@ -418,10 +485,9 @@ async function doSave() {
     const file2 = $("f_foto2").files[0]; 
     const fileMusik = $("f_musik").files[0];
 
-    // Upload & dapatkan URL (hanya jika ada file baru yang dipilih)
-    let f1_url = currentConfig.f1_url || "";
-    let f2_url = currentConfig.f2_url || "";
-    let musik_url = currentConfig.musik_url || "";
+    let f1_url = currentConfig.f1_url;
+    let f2_url = currentConfig.f2_url;
+    let musik_url = currentConfig.musik_url;
 
     if(file1) f1_url = await uploadFile(file1, "foto1");
     if(file2) f2_url = await uploadFile(file2, "foto2");
@@ -438,16 +504,14 @@ async function doSave() {
       calBulan: $("i_calBulan").value, calTanggal: $("i_calTanggal").value,
       gdg: $("i_gdg").value, map: $("i_map").value,
       galKicker: $("i_galKicker").value, lblFoto1: $("i_lblFoto1").value, lblFoto2: $("i_lblFoto2").value,
-      mengundang: guests,
+      mengundang: guests, // Save the fully updated guest array directly to firestore
       f1_url: f1_url,
       f2_url: f2_url,
       musik_url: musik_url
     };
 
-    // Tulis data ke Firestore DB Document
     await setDoc(doc(db, "wedding_data", "config"), newCfg);
     
-    // Update local state biar URL tersimpan kalau ditekan simpan 2x tanpa upload ulang
     currentConfig = newCfg;
 
     $("previewFrame").src = "index.html?t=" + Date.now();
@@ -472,7 +536,6 @@ if($("btnSaveMain")) $("btnSaveMain").addEventListener("click", doSave);
 if($("btnSaveMobile")) $("btnSaveMobile").addEventListener("click", doSave);
 if($("btnRefreshPreview")) $("btnRefreshPreview").addEventListener("click", () => { $("previewFrame").src = "index.html?t=" + Date.now(); });
 
-// Panggil data pertama kali
 window.onload = loadData;
 </script>
 </body>
